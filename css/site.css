@@ -131,13 +131,11 @@
   .v-port .frame{position:relative;flex:1;min-height:0;overflow:hidden;border-bottom:1px solid var(--hairline);container-type:size;container-name:frame;}
   /* transform creates a stacking context, so the panel itself must clear the ::after
      decoration (z-index 1) — a z-index on its children would be trapped inside. */
-  /* Panels do not move - they cross-fade in place, on exactly the formula .sub-panel uses
-     (opacity 1 - |i - progress|, clamped by CSS's own 0..1 opacity range). They are all
-     stacked at inset:0, so an invisible panel still hit-tests: the stage driver sets
-     pointer-events on the active one, since opacity:0 does not stop clicks and the LAST
-     panel in the DOM would otherwise swallow every link on the page. */
-  .v-port .panel{position:absolute;inset:0;z-index:2;will-change:opacity;
-    opacity:calc(1 - max(var(--i) - var(--progress,0), var(--progress,0) - var(--i)));}
+  /* BASELINE (mobile) - the whole panel slides through the frame, which is what this has
+     always done. 566+ overrides it with the cross-fade further down; the two scroll
+     regimes split at the same 565 the two layouts do. */
+  .v-port .panel{position:absolute;inset:0;z-index:2;will-change:transform;
+    transform:translateY(calc((var(--i) - var(--progress,0)) * 100%));}
   /* Horizontal padding is a keyframe pair; VERTICAL padding is zero and must stay zero.
      The block is a centred grid item, so vertical padding clears nothing - all it can do
      is shrink the content box. The moment the block's margin box outgrows that box, grid
@@ -298,13 +296,27 @@
      prepended to .frame at runtime, which shifts every child index. */
   @supports (animation-timeline: scroll()) {
     .page[data-page="portrait"].on{scroll-timeline-name:--page;}
-    .v-port .panel,.v-port .sub-panel{animation-duration:auto;animation-timing-function:linear;
+    .v-port .panel,.v-port .panel > *:not(.p-phone),.v-port .sub-panel,
+    .v-port .panel--project .p-phone{
+      animation-duration:auto;animation-timing-function:linear;
       animation-fill-mode:both;animation-timeline:--page;animation-range:0 200svh;}
-    .v-port .panel[data-panel="0"],.v-port .sub-panel:nth-child(1){animation-name:fade-0;}
-    .v-port .panel[data-panel="1"],.v-port .sub-panel:nth-child(2){animation-name:fade-1;}
-    .v-port .panel[data-panel="2"],.v-port .sub-panel:nth-child(3){animation-name:fade-2;}
-    .v-port .panel[data-panel="3"],.v-port .sub-panel:nth-child(4){animation-name:fade-3;}
+    /* the bar cross-fades at every width; the PANEL slides, which is the mobile regime */
+    .v-port .panel{animation-name:panel-slide;}
+    .v-port .sub-panel:nth-child(1){animation-name:fade-0;}
+    .v-port .sub-panel:nth-child(2){animation-name:fade-1;}
+    .v-port .sub-panel:nth-child(3){animation-name:fade-2;}
+    .v-port .sub-panel:nth-child(4){animation-name:fade-3;}
+    @media (min-width:566px){
+      .v-port .panel{animation-name:none;}
+      .v-port .panel[data-panel="0"] > *:not(.p-phone){animation-name:fade-0;}
+      .v-port .panel[data-panel="1"] > *:not(.p-phone){animation-name:fade-1;}
+      .v-port .panel[data-panel="2"] > *:not(.p-phone){animation-name:fade-2;}
+      .v-port .panel[data-panel="3"] > *:not(.p-phone){animation-name:fade-3;}
+      .v-port .panel--project .p-phone{animation-name:phone-slide;}
+    }
   }
+  @keyframes panel-slide{from{transform:translateY(calc(var(--i) * 100%))}to{transform:translateY(calc((var(--i) - 2) * 100%))}}
+  @keyframes phone-slide{from{transform:translateY(calc(var(--i) * 100cqb))}to{transform:translateY(calc((var(--i) - 2) * 100cqb))}}
   @keyframes fade-0{0%{opacity:1}50%{opacity:0}100%{opacity:0}}
   @keyframes fade-1{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
   @keyframes fade-2{0%{opacity:0}50%{opacity:0}100%{opacity:1}}
@@ -316,6 +328,24 @@
   }
   @keyframes bgnoise{0%{transform:translate(0,0)}10%{transform:translate(-30px,-20px)}20%{transform:translate(40px,10px)}30%{transform:translate(-20px,30px)}40%{transform:translate(15px,-35px)}50%{transform:translate(-45px,25px)}60%{transform:translate(30px,40px)}70%{transform:translate(-15px,-30px)}80%{transform:translate(25px,20px)}90%{transform:translate(-35px,-15px)}100%{transform:translate(0,0)}}
   .v-port .panel > *{position:relative;z-index:2;}
+  /* 566+ ONLY: the panel stops moving and its contents take over, doing two different
+     things - the TEXT cross-fades in place on exactly the formula .sub-panel uses
+     (opacity 1 - |i - progress|; CSS clamps opacity to 0..1 itself), while the phone
+     image keeps the original slide. Mobile is untouched by all of this.
+     The panels end up stacked at inset:0, so an invisible one still hit-tests: the stage
+     driver sets pointer-events on the active panel, since opacity:0 does not stop clicks
+     and the LAST panel in the DOM would otherwise swallow every link on the page.
+     The phone's travel is 100cqb, the frame's block size (.frame is container-type:size)
+     - the same distance 100% of the panel resolved to, and the reason it can't just be a
+     percentage: a transform percentage is of the PHONE's own box. positionAll() does not
+     run at these widths, so nothing else is writing that transform. */
+  @media (min-width:566px){
+    .v-port .panel{transform:none;will-change:auto;}
+    .v-port .panel > *:not(.p-phone){will-change:opacity;
+      opacity:calc(1 - max(var(--i) - var(--progress,0), var(--progress,0) - var(--i)));}
+    .v-port .panel--project .p-phone{will-change:transform;
+      transform:translateY(calc((var(--i) - var(--progress,0)) * 100cqb));}
+  }
   /* vw-based insets below all top out at their keyframe value at 1000px. --maxw
      is reached — past that the content column is a fixed width, so anything still scaling
      with vw would slide the content sideways against the background band. */
