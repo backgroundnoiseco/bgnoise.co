@@ -475,7 +475,14 @@
        let a two-line title grow the box and drag the whole composition down with it. */
     .v-port .panel--project .p-info{position:relative;justify-self:start;gap:0;max-width:none;
       height:calc(var(--kicker-block) + var(--hero-size) * 1.64);
-      margin-top:var(--hero-drop);margin-bottom:var(--kicker-block);}
+      /* Half a line down. The box is the wordmark's two lines but the titles are one, so
+         top-aligned they read high against it; this centres the single line in the space
+         the wordmark fills. Added to the top margin and taken off the bottom one, which
+         moves the block by exactly --title-drop - put it on the top margin alone and a
+         centred item moves by half. */
+      --title-drop:calc(var(--hero-size) * 0.41);
+      margin-top:calc(var(--hero-drop) + var(--title-drop));
+      margin-bottom:calc(var(--kicker-block) - var(--title-drop));}
     /* the box is shorter than its content on a two-line title, and flex items shrink to
        fit by default - which would squash the type rather than overflow */
     .v-port .panel--project .p-info > *{flex-shrink:0;}
