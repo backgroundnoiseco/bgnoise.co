@@ -223,6 +223,11 @@
      by up to ~127px (much less on short ones - ~25px at 640 tall). A phone never crosses
      it; dragging a desktop window across it does. */
   @media (max-width:565px){
+    /* The lag line is a .kicker, which carries its own margin-bottom for the hero's
+       composition. Mobile's project column spaces its children with the flex gap instead,
+       so the two stack and the title ends up twice as far from its lag line as anything
+       else in that column is from its neighbour. */
+    .v-port .panel--project .p-info .kicker{margin-bottom:0;}
     .v-port .panel--hero{
       /* Bigger type and a smaller drop than the shared curve gives: a phone has far less
          frame to fill, so the wordmark reads small and sits low on the base values. The
@@ -461,28 +466,29 @@
      Below 566 none of this applies and the old two-column layout is untouched. */
   @media (min-width:566px){
     .v-port .panel--project{align-items:center;justify-content:stretch;
-      grid-template-columns:minmax(0,1fr);gap:0;--phone-w:min(240px,40cqb,26cqi);
+      grid-template-columns:minmax(0,1fr);gap:0;
       padding:0 var(--hero-pad-r) 0 var(--hero-pad-l);}
-    /* The phone is out of flow, so nothing stops the title running under it - hence the
-       max-width, stated against the same --phone-w the phone itself uses. A long title
-       then WRAPS into the wordmark's own two-line box rather than being shrunk by
-       fitTitles(), which is both closer to the hero's shape and keeps the type size. */
-    .v-port .panel--project .p-info{position:relative;justify-self:start;gap:0;
-      max-width:calc(100% - var(--phone-w) - 40px);
+    .v-port .panel--project .p-info{position:relative;justify-self:start;gap:0;max-width:none;
       margin-top:var(--hero-drop);margin-bottom:var(--kicker-block);}
-    /* The wordmark is TWO lines and most titles are one, so matching the block heights is
-       what makes the two land on the same line - match only the centring and a one-line
-       title floats ~35px above the wordmark's baseline. Give the title the wordmark's own
-       two-line box and sit the text at the bottom of it. fitTitles() may shrink the font
-       from JS; min-height stays keyed to --hero-size, so the baseline holds either way. */
+    /* The title gets the wordmark's own TWO-line box and sits at the TOP of it. The
+       min-height is what makes .p-info's height equal .hero-block's, which is what puts
+       the two blocks' tops on the same line - without it a one-line title is 35px lower,
+       because a shorter block centres differently. flex-START, not flex-end: bottom-
+       aligning matched the wordmark's last baseline but pushed the title a full empty
+       line away from its own kicker, and that gap has to read the same as the hero's. */
     .v-port .panel--project .p-info .role{font-size:var(--hero-size);line-height:.82;
-      min-height:calc(var(--hero-size) * 1.64);display:flex;align-items:flex-end;
+      min-height:calc(var(--hero-size) * 1.64);display:flex;align-items:flex-start;
       width:max-content;max-width:100%;}
+    /* Anchored to the BLOCK's bottom, not the title's, so it lands on the same line on
+       every project panel whether the title runs to one line or two - that line being
+       where the hero's wordmark ends. */
     .v-port .panel--project .p-info .cta{position:absolute;top:100%;left:0;margin-top:16px;}
-    /* top/bottom + margin-block:auto centres it WITHOUT a transform - positionAll() owns
-       the phone's transform below 566 and would clobber a translateY here. */
-    .v-port .panel--project .p-phone{position:absolute;top:0;bottom:0;margin-block:auto;
-      height:max-content;width:var(--phone-w);max-width:none;right:var(--hero-pad-r);}
+    /* Centred in the frame, both axes - inset:0 + margin:auto rather than a transform,
+       since positionAll() owns the phone's transform below 566. The title is allowed to
+       run across it on a narrow window: .p-info comes after .p-phone in the DOM at the
+       same z-index, so the type paints on top. */
+    .v-port .panel--project .p-phone{position:absolute;inset:0;margin:auto;
+      height:max-content;width:min(240px,40cqb);max-width:none;}
   }
   .v-port .p-info .short{display:none;}
 

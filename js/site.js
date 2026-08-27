@@ -149,17 +149,10 @@
         // padding is the single source of breathing room and this can't undercut it
         const pr = slot.getBoundingClientRect();
         const padR = parseFloat(getComputedStyle(slot).paddingRight) || 0;
-        let limit = Math.min(fr.right, pr.right - padR);
-        // 566+ the phone is out of flow on the right, so the panel's own padding is no
-        // longer the binding edge - a single word too wide to wrap would slide under it.
-        // Below 566 the phone sits in the column to the LEFT of the title, so this bound
-        // would be nonsense there.
-        if (window.innerWidth > 565) {
-          const ph = slot.querySelector('.p-phone');
-          const phr = ph && ph.getBoundingClientRect();
-          if (phr && phr.width) limit = Math.min(limit, phr.left - 24);
-        }
-        const avail = limit - tr.left;
+        // The panel's content edge is the only bound. Above 565 the phone is centred in
+        // the frame and the title is MEANT to run across it on a narrow window, so the
+        // phone deliberately does not constrain this.
+        const avail = Math.min(fr.right, pr.right - padR) - tr.left;
         if (tr.width > avail && avail > 0) {
           const cur = parseFloat(getComputedStyle(role).fontSize);
           role.style.fontSize = Math.max(14, cur * avail / tr.width).toFixed(1) + 'px';
