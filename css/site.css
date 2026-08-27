@@ -510,7 +510,14 @@
        in normal flow directly under the title and simply overflows the box when the title
        runs to two lines - which moves the CTA without moving the block. min-height would
        let a two-line title grow the box and drag the whole composition down with it. */
-    .v-port .panel--project .p-info{position:relative;justify-self:start;gap:0;max-width:none;
+    /* STRETCH, not start. .p-info carries will-change:opacity for the cross-fade, which
+       promotes it to its own layer, and this face's glyphs overhang their advance width by
+       ~0.14em - the 'x' of Shadowbox, the 'e' of Porcupine. Shrink-wrapped, .p-info's box
+       ended exactly at the title's, so that ink fell outside the layer and was clipped.
+       Stretching costs nothing visually (the kicker is a block, .role is width:max-content
+       and the CTA is align-self:flex-start, so none of them move) and it is also why the
+       hero never had this: .hero-block stretches, so the h1's overhang is well inside it. */
+    .v-port .panel--project .p-info{position:relative;justify-self:stretch;gap:0;max-width:none;
       height:calc(var(--kicker-block) + var(--hero-size) * 1.64);
       /* A full line down. The box is the wordmark's two lines but the titles are one, so
          top-aligned they read high against it; one line lands the title exactly where the
