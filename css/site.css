@@ -197,15 +197,21 @@
      the wordmark to get the snake to actually cross the text. It passes BEHIND (z-index
      1 against the text's 2), so overlap is the intent, not a collision. */
   @media (max-width:565px){ .v-port .panel--hero .hero-snake{display:none;} }
-  .v-port .panel--hero{display:grid;align-items:center;--hero-drop:min(clamp(424px, calc(490.84px + var(--kf-x) * -0.0852551), 490.84px),
+  /* The drop and the kicker metrics live on .v-port, not on .panel--hero, because the
+     PROJECT panels reuse them above 565 to put their title exactly where the wordmark
+     sits. The mobile block further down still overrides --hero-drop on .panel--hero, so
+     the hero keeps its own phone position while the projects keep the base values. */
+  .v-port{--hero-drop:min(clamp(424px, calc(490.84px + var(--kf-x) * -0.0852551), 490.84px),
       max(0px, calc(100svh - clamp(458.16px, calc(458.16px + var(--kf-x) * 0.0852551), 525px))));
     --kicker-fs:clamp(9px, calc(9px + var(--kf-x) * 0.00127551), 10px);
     --kicker-mb:clamp(20px, calc(20px + var(--kf-x) * 0.01530612), 32px);
     --kicker-block:calc(var(--kicker-fs) * 1.55 + var(--kicker-mb));
-    padding:0
-            calc(var(--cap) + clamp(32px, calc(60px + var(--kf-x) * -0.03571428), 60px))
-            0
-            calc(var(--cap) + clamp(60px, calc(60px + var(--kf-x) * 0.0369898), 89px));}
+    /* the hero's own horizontal padding, shared with .panel--project below 
+       (the pair is stated once here and referenced twice) */
+    --hero-pad-r:calc(var(--cap) + clamp(32px, calc(60px + var(--kf-x) * -0.03571428), 60px));
+    --hero-pad-l:calc(var(--cap) + clamp(60px, calc(60px + var(--kf-x) * 0.0369898), 89px));}
+  .v-port .panel--hero{display:grid;align-items:center;
+    padding:0 var(--hero-pad-r) 0 var(--hero-pad-l);}
   /* MOBILE IS ITS OWN VERTICAL REGIME. Above 565 the drop's two limits are tuned so the
      block lands at the same height as it does at the band cap - that match is a
      desktop-resize concern, and at phone widths it pushed the wordmark down out of the
@@ -440,18 +446,44 @@
   /* Panel description: the body copy that used to sit in the bar. Sized in cqb so it
      scales with the frame like the title and CTA; measure-capped so it wraps to a block
      rather than stretching the info column to its 320px max. */
-  .v-port .p-info .tag{font-family:"DM Serif Display",serif;font-weight:400;
-    /* sized by frame height AND viewport width: at narrow widths the info column is only
-       ~157px, where a height-derived 20px ribbons into five lines. The vw term takes over
-       there (14px at 390), the cqb term still caps it on short frames, 15px overall. */
-    font-size:min(2.9cqb,calc(13.67px + var(--kf-x) * 0.00169643),15px);line-height:1.25;letter-spacing:-.005em;
-    margin:calc(var(--feat-pull, 12px) * -1) 0 0;max-width:24ch;color:inherit;
-    /* same divider anchor the hero's tagline uses; padding in em and the rule in
-       currentColor so both track the cqb font size and the panel's ink (the Porcupine
-       panel inverts to dark navy, where the hero's fixed cream rule would read wrong) */
-    padding-left:.9em;border-left:1px solid color-mix(in srgb, currentColor 25%, transparent);}
   .v-port .p-info .cta{margin-top:8px;display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:min(11px,1.833cqb);letter-spacing:.2em;text-transform:uppercase;color:var(--ink);padding:8px 14px;border:1px solid #2a2724;align-self:flex-start;width:auto;}
   .v-port .p-info a.cta::after{content:"→";}
+
+  /* PROJECT PANELS, 566+: the title takes the wordmark's place.
+     .panel--project gets the SAME grid and padding as .panel--hero, and .p-info carries
+     the same --hero-drop and margin-bottom as .hero-block - so the title lands exactly
+     where the wordmark does BY CONSTRUCTION, not by a second set of numbers fitted to
+     match. Anything that moves the hero moves these with it.
+     The CTA is taken out of flow for that to hold: .p-info's in-flow height has to stay
+     kicker + title, which is what the margin-bottom cancels against (see .hero-block).
+     Leave the CTA in flow and it pushes the title up by half its own height.
+     The phone leaves the grid for the band's right edge, on the hero's own right padding.
+     Below 566 none of this applies and the old two-column layout is untouched. */
+  @media (min-width:566px){
+    .v-port .panel--project{align-items:center;justify-content:stretch;
+      grid-template-columns:minmax(0,1fr);gap:0;--phone-w:min(240px,40cqb,26cqi);
+      padding:0 var(--hero-pad-r) 0 var(--hero-pad-l);}
+    /* The phone is out of flow, so nothing stops the title running under it - hence the
+       max-width, stated against the same --phone-w the phone itself uses. A long title
+       then WRAPS into the wordmark's own two-line box rather than being shrunk by
+       fitTitles(), which is both closer to the hero's shape and keeps the type size. */
+    .v-port .panel--project .p-info{position:relative;justify-self:start;gap:0;
+      max-width:calc(100% - var(--phone-w) - 40px);
+      margin-top:var(--hero-drop);margin-bottom:var(--kicker-block);}
+    /* The wordmark is TWO lines and most titles are one, so matching the block heights is
+       what makes the two land on the same line - match only the centring and a one-line
+       title floats ~35px above the wordmark's baseline. Give the title the wordmark's own
+       two-line box and sit the text at the bottom of it. fitTitles() may shrink the font
+       from JS; min-height stays keyed to --hero-size, so the baseline holds either way. */
+    .v-port .panel--project .p-info .role{font-size:var(--hero-size);line-height:.82;
+      min-height:calc(var(--hero-size) * 1.64);display:flex;align-items:flex-end;
+      width:max-content;max-width:100%;}
+    .v-port .panel--project .p-info .cta{position:absolute;top:100%;left:0;margin-top:16px;}
+    /* top/bottom + margin-block:auto centres it WITHOUT a transform - positionAll() owns
+       the phone's transform below 566 and would clobber a translateY here. */
+    .v-port .panel--project .p-phone{position:absolute;top:0;bottom:0;margin-block:auto;
+      height:max-content;width:var(--phone-w);max-width:none;right:var(--hero-pad-r);}
+  }
   .v-port .p-info .short{display:none;}
 
   /* ticker bar between projects */

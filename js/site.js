@@ -105,6 +105,9 @@
         if (!phone) return;
         phone.style.transform = '';
         if (info) info.style.transform = '';
+        // 566+ places the phone in CSS (absolute, on the band's right edge) so the title
+        // can take the wordmark's spot. Only the mobile two-column layout needs this.
+        if (window.innerWidth > 565) return;
         const pRect = phone.getBoundingClientRect();
         if (pRect.width <= 0) return;
         // Shift the pair so the phone's centre lands ~37% of width. Past the layout cap
@@ -146,7 +149,17 @@
         // padding is the single source of breathing room and this can't undercut it
         const pr = slot.getBoundingClientRect();
         const padR = parseFloat(getComputedStyle(slot).paddingRight) || 0;
-        const avail = Math.min(fr.right, pr.right - padR) - tr.left;
+        let limit = Math.min(fr.right, pr.right - padR);
+        // 566+ the phone is out of flow on the right, so the panel's own padding is no
+        // longer the binding edge - a single word too wide to wrap would slide under it.
+        // Below 566 the phone sits in the column to the LEFT of the title, so this bound
+        // would be nonsense there.
+        if (window.innerWidth > 565) {
+          const ph = slot.querySelector('.p-phone');
+          const phr = ph && ph.getBoundingClientRect();
+          if (phr && phr.width) limit = Math.min(limit, phr.left - 24);
+        }
+        const avail = limit - tr.left;
         if (tr.width > avail && avail > 0) {
           const cur = parseFloat(getComputedStyle(role).fontSize);
           role.style.fontSize = Math.max(14, cur * avail / tr.width).toFixed(1) + 'px';
