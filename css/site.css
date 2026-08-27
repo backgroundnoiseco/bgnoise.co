@@ -131,7 +131,13 @@
   .v-port .frame{position:relative;flex:1;min-height:0;overflow:hidden;border-bottom:1px solid var(--hairline);container-type:size;container-name:frame;}
   /* transform creates a stacking context, so the panel itself must clear the ::after
      decoration (z-index 1) — a z-index on its children would be trapped inside. */
-  .v-port .panel{position:absolute;inset:0;z-index:2;transform:translateY(calc((var(--i) - var(--progress,0)) * 100%));will-change:transform;}
+  /* Panels do not move - they cross-fade in place, on exactly the formula .sub-panel uses
+     (opacity 1 - |i - progress|, clamped by CSS's own 0..1 opacity range). They are all
+     stacked at inset:0, so an invisible panel still hit-tests: the stage driver sets
+     pointer-events on the active one, since opacity:0 does not stop clicks and the LAST
+     panel in the DOM would otherwise swallow every link on the page. */
+  .v-port .panel{position:absolute;inset:0;z-index:2;will-change:opacity;
+    opacity:calc(1 - max(var(--i) - var(--progress,0), var(--progress,0) - var(--i)));}
   /* Horizontal padding is a keyframe pair; VERTICAL padding is zero and must stay zero.
      The block is a centred grid item, so vertical padding clears nothing - all it can do
      is shrink the content box. The moment the block's margin box outgrows that box, grid
@@ -285,24 +291,25 @@
      longer depends on it; CSS animations also outrank the var-driven declarations in the
      cascade, so these simply take over where supported. Travel is exactly 200svh: track
      (3*100svh - header) minus sticky stage (100svh - header). Prosession is hidden, so
-     these are 3-panel values - restore 300svh / -3 / 33.333%,66.667% when it returns. */
+     these are 3-panel values - restore 300svh and 33.333%/66.667% when it returns.
+     ONE keyframe set drives both the panels and the bar: they cross-fade on the same
+     value, so a single fade-N is the only place the panel count is encoded here.
+     The panels are selected by [data-panel], not :nth-child - the rect <svg> is
+     prepended to .frame at runtime, which shifts every child index. */
   @supports (animation-timeline: scroll()) {
     .page[data-page="portrait"].on{scroll-timeline-name:--page;}
-    .v-port .panel{animation-name:panel-slide;animation-duration:auto;animation-timing-function:linear;
+    .v-port .panel,.v-port .sub-panel{animation-duration:auto;animation-timing-function:linear;
       animation-fill-mode:both;animation-timeline:--page;animation-range:0 200svh;}
-    .v-port .sub-panel{animation-duration:auto;animation-timing-function:linear;
-      animation-fill-mode:both;animation-timeline:--page;animation-range:0 200svh;}
-    .v-port .sub-panel:nth-child(1){animation-name:bar-0;}
-    .v-port .sub-panel:nth-child(2){animation-name:bar-1;}
-    .v-port .sub-panel:nth-child(3){animation-name:bar-2;}
-    .v-port .sub-panel:nth-child(4){animation-name:bar-3;}
+    .v-port .panel[data-panel="0"],.v-port .sub-panel:nth-child(1){animation-name:fade-0;}
+    .v-port .panel[data-panel="1"],.v-port .sub-panel:nth-child(2){animation-name:fade-1;}
+    .v-port .panel[data-panel="2"],.v-port .sub-panel:nth-child(3){animation-name:fade-2;}
+    .v-port .panel[data-panel="3"],.v-port .sub-panel:nth-child(4){animation-name:fade-3;}
   }
-  @keyframes panel-slide{from{transform:translateY(calc(var(--i) * 100%))}to{transform:translateY(calc((var(--i) - 2) * 100%))}}
-  @keyframes bar-0{0%{opacity:1}50%{opacity:0}100%{opacity:0}}
-  @keyframes bar-1{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
-  @keyframes bar-2{0%{opacity:0}50%{opacity:0}100%{opacity:1}}
-  /* bar-3 unused while Prosession is hidden; 4-panel stops were 33.333%/66.667% */
-  @keyframes bar-3{0%{opacity:0}66.667%{opacity:0}100%{opacity:1}}
+  @keyframes fade-0{0%{opacity:1}50%{opacity:0}100%{opacity:0}}
+  @keyframes fade-1{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+  @keyframes fade-2{0%{opacity:0}50%{opacity:0}100%{opacity:1}}
+  /* fade-3 unused while Prosession is hidden; 4-panel stops were 33.333%/66.667% */
+  @keyframes fade-3{0%{opacity:0}66.667%{opacity:0}100%{opacity:1}}
 
   @media (prefers-reduced-motion: reduce){
     .v-port .frame::before{animation:none;}

@@ -63,14 +63,23 @@
     }
     const stickyTop = () => stickyTopV;
 
-    let raf = 0, lastActive = null;
+    let raf = 0, lastActive = null, lastPanel = -1;
     function update(){
       raf = 0;
       const st = root.scrollTop;
       const p = Math.min(Math.max((st - trackStart) / travel, 0), 1) * last;
       vport.style.setProperty('--progress', p);
       if (vport._onProgress) vport._onProgress(p);   // snake idles when the hero leaves
-      let active = panels[Math.round(p)].dataset.idx;
+      // The panels cross-fade in place rather than sliding, so they all sit stacked at
+      // inset:0 and opacity:0 does NOT stop hit-testing - without this the last panel in
+      // the DOM swallows every click on the page. Written only when the active panel
+      // changes, same as the rail, so the hot path stays one read and one var write.
+      const pi = Math.round(p);
+      if (pi !== lastPanel) {
+        lastPanel = pi;
+        panels.forEach((el, i) => { el.style.pointerEvents = i === pi ? '' : 'none'; });
+      }
+      let active = panels[pi].dataset.idx;
       if (st >= outroLine) active = 'contact';
       if (active === lastActive) return;
       lastActive = active;
