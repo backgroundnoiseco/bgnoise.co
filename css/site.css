@@ -32,7 +32,7 @@
          --hero-size            54    ->     85     0.03954081
          badge width            82    ->    136     0.06887755
          --kicker-fs             9    ->     10     0.00127551
-         --kicker-mb            20    ->     32     0.01530612
+         --kicker-mb            20    ->     27     0.00892857
          --hero-drop ceiling   490.84 -> 424     -0.0852551   (see below - BOTH of
          --hero-drop guard     458.16 -> 525      0.0852551    its limits are pairs)
          hero pad left          60    ->     89     0.0369898
@@ -208,7 +208,7 @@
   .v-port{--hero-drop:min(clamp(424px, calc(490.84px + var(--kf-x) * -0.0852551), 490.84px),
       max(0px, calc(100svh - clamp(458.16px, calc(458.16px + var(--kf-x) * 0.0852551), 525px))));
     --kicker-fs:clamp(9px, calc(9px + var(--kf-x) * 0.00127551), 10px);
-    --kicker-mb:clamp(20px, calc(20px + var(--kf-x) * 0.01530612), 32px);
+    --kicker-mb:clamp(20px, calc(20px + var(--kf-x) * 0.00892857), 27px);
     --kicker-block:calc(var(--kicker-fs) * 1.55 + var(--kicker-mb));
     /* the hero's own horizontal padding, shared with .panel--project below 
        (the pair is stated once here and referenced twice) */
