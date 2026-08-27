@@ -468,21 +468,22 @@
     .v-port .panel--project{align-items:center;justify-content:stretch;
       grid-template-columns:minmax(0,1fr);gap:0;
       padding:0 var(--hero-pad-r) 0 var(--hero-pad-l);}
+    /* A FIXED height, not min-height: it has to equal .hero-block's whatever the content
+       does, because that equality is what aligns the two blocks' tops. The CTA then rides
+       in normal flow directly under the title and simply overflows the box when the title
+       runs to two lines - which moves the CTA without moving the block. min-height would
+       let a two-line title grow the box and drag the whole composition down with it. */
     .v-port .panel--project .p-info{position:relative;justify-self:start;gap:0;max-width:none;
+      height:calc(var(--kicker-block) + var(--hero-size) * 1.64);
       margin-top:var(--hero-drop);margin-bottom:var(--kicker-block);}
-    /* The title gets the wordmark's own TWO-line box and sits at the TOP of it. The
-       min-height is what makes .p-info's height equal .hero-block's, which is what puts
-       the two blocks' tops on the same line - without it a one-line title is 35px lower,
-       because a shorter block centres differently. flex-START, not flex-end: bottom-
-       aligning matched the wordmark's last baseline but pushed the title a full empty
-       line away from its own kicker, and that gap has to read the same as the hero's. */
+    /* the box is shorter than its content on a two-line title, and flex items shrink to
+       fit by default - which would squash the type rather than overflow */
+    .v-port .panel--project .p-info > *{flex-shrink:0;}
+    /* Natural height - the two-line box lives on .p-info above, so the title is free to
+       be one line or two and the CTA below it tracks the text rather than the block. */
     .v-port .panel--project .p-info .role{font-size:var(--hero-size);line-height:.82;
-      min-height:calc(var(--hero-size) * 1.64);display:flex;align-items:flex-start;
       width:max-content;max-width:100%;}
-    /* Anchored to the BLOCK's bottom, not the title's, so it lands on the same line on
-       every project panel whether the title runs to one line or two - that line being
-       where the hero's wordmark ends. */
-    .v-port .panel--project .p-info .cta{position:absolute;top:100%;left:0;margin-top:16px;}
+    .v-port .panel--project .p-info .cta{margin-top:16px;}
     /* Centred in the frame, both axes - inset:0 + margin:auto rather than a transform,
        since positionAll() owns the phone's transform below 566. The title is allowed to
        run across it on a narrow window: .p-info comes after .p-phone in the DOM at the
