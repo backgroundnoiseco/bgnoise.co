@@ -371,6 +371,11 @@
      a centred item moves by half. Scoped to 566+ because mobile overrides --hero-drop on
      .panel--hero and is its own vertical regime. */
   @media (min-width:566px){
+    /* Tighter than mobile's 20px. Scoped rather than changed at the source because the
+       base value IS the mobile one - the hero reads it at every width. The 4px step at the
+       boundary is nothing against the ~127px one the hero's own vertical regime already
+       takes there. */
+    .v-port{--kicker-mb:16px;}
     .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.41);
       margin-top:calc(var(--hero-drop) + var(--line-drop));
       margin-bottom:calc(var(--kicker-block) - var(--line-drop));}
