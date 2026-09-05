@@ -574,8 +574,17 @@
        since positionAll() owns the phone's transform below 566. The title is allowed to
        run across it on a narrow window: .p-info comes after .p-phone in the DOM at the
        same z-index, so the type paints on top. */
+    /* 165, not 240: the phone is centred in the frame and the title sits low, so the two
+       share a band and the type used to cross the image. 165 is the largest that clears
+       the lag line on a normal window - the true limit measures 171 at 1512x885, 175 at
+       900x885, 181 at 566x885 and 200 at 1080 tall - with a few px in hand.
+       It cannot clear at every height: the room above the text is set by --hero-drop,
+       which the svh guard shrinks on short windows, and below ~850px tall the limit falls
+       to ~86px, which is a thumbnail rather than an image. There the type crosses it
+       again. Horizontal clearance is not achievable at all while the phone is centred -
+       at 1512 the Porcupine title's ink already ends past the frame's centre line. */
     .v-port .panel--project .p-phone{position:absolute;inset:0;margin:auto;
-      height:max-content;width:min(240px,40cqb);max-width:none;}
+      height:max-content;width:min(165px,40cqb);max-width:none;}
   }
   .v-port .p-info .short{display:none;}
 
