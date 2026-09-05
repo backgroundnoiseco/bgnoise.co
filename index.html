@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css?v=174">
+<link rel="stylesheet" href="css/site.css?v=175">
 </head>
 <body>
 
@@ -77,7 +77,9 @@
       <div class="p-info">
         <div class="kicker">◎ Experimental Canvas</div>
         <h2 class="role">Shadowbox</h2>
-        <span class="cta">Coming soon</span>
+        <!-- CTA parked: "Coming soon" / "View on App Store" are coming back
+             somewhere else. Unwrap to restore - the CSS for .cta is left in place. -->
+        <template data-disabled="cta"><span class="cta">Coming soon</span></template>
       </div>
       </article>
       <article class="panel panel--project" data-panel="2" data-idx="0" style="--i:2">
@@ -89,7 +91,9 @@
       <div class="p-info">
         <div class="kicker">◎ Random Name Generator</div>
         <h2 class="role">Unicorn Porcupine</h2>
-        <a href="https://apps.apple.com/il/app/unicorn-porcupine/id6760215589" target="_blank" rel="noopener" class="cta"><span class="full">View on App Store</span><span class="short">App Store</span></a>
+        <!-- CTA parked: "Coming soon" / "View on App Store" are coming back
+             somewhere else. Unwrap to restore - the CSS for .cta is left in place. -->
+        <template data-disabled="cta"><a href="https://apps.apple.com/il/app/unicorn-porcupine/id6760215589" target="_blank" rel="noopener" class="cta"><span class="full">View on App Store</span><span class="short">App Store</span></a></template>
       </div>
       </article>
       <!-- Prosession hidden for now. To restore: unwrap these two templates, put the
@@ -105,7 +109,9 @@
       <div class="p-info">
         <div class="kicker">◎ Midi Sequencer</div>
         <h2 class="role">Prosession</h2>
-        <span class="cta">Coming soon</span>
+        <!-- CTA parked: "Coming soon" / "View on App Store" are coming back
+             somewhere else. Unwrap to restore - the CSS for .cta is left in place. -->
+        <template data-disabled="cta"><span class="cta">Coming soon</span></template>
       </div>
       </article>
       </template>
@@ -179,7 +185,7 @@
   </div>
 </div>
 
-<script src="js/site.js?v=174"></script>
+<script src="js/site.js?v=175"></script>
 
 </body>
 </html>

@@ -365,6 +365,16 @@
      margin-top is the deliberate bias on top of that - see --hero-drop. It survives the
      algebra above untouched: the mt/2 term is independent of the kicker cancellation. */
   .v-port .hero-block{padding-left:0;margin-top:var(--hero-drop);margin-bottom:var(--kicker-block);}
+  /* 566+: the wordmark drops one line of its own type, and .p-info's --title-drop carries
+     the same line so the project titles move with it. Added to the top margin and taken
+     off the bottom, which moves the block by exactly --line-drop - on the top margin alone
+     a centred item moves by half. Scoped to 566+ because mobile overrides --hero-drop on
+     .panel--hero and is its own vertical regime. */
+  @media (min-width:566px){
+    .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.82);
+      margin-top:calc(var(--hero-drop) + var(--line-drop));
+      margin-bottom:calc(var(--kicker-block) - var(--line-drop));}
+  }
   /* The badge is anchored to the THIRD concentric rectangle - two --ring-step insets in
      from the band's top-right corner (--cap is the band's own inset). --ring-step MUST stay
      equal to STEP in js/site.js, which is what actually spaces the rings; move one and the
@@ -523,13 +533,14 @@
        hero never had this: .hero-block stretches, so the h1's overhang is well inside it. */
     .v-port .panel--project .p-info{position:relative;justify-self:stretch;gap:0;max-width:none;
       height:calc(var(--kicker-block) + var(--hero-size) * 1.64);
-      /* A full line down. The box is the wordmark's two lines but the titles are one, so
-         top-aligned they read high against it; one line lands the title exactly where the
-         wordmark's SECOND line sits. Added to the top margin and taken off the bottom one,
+      /* TWO lines down. The first lands the title exactly where the wordmark's SECOND
+         line sits - the box is the wordmark's two lines and the titles are one, so
+         top-aligned they read high against it. The second is the shared move down that
+         .hero-block also takes (--line-drop below), which is what keeps the two in step. Added to the top margin and taken off the bottom one,
          which moves the block by exactly --title-drop - put it on the top margin alone and
          a centred item moves by half. The whole block moves, lag line included, so the
          gap between the two stays the hero's. */
-      --title-drop:calc(var(--hero-size) * 0.82);
+      --title-drop:calc(var(--hero-size) * 1.64);
       margin-top:calc(var(--hero-drop) + var(--title-drop));
       margin-bottom:calc(var(--kicker-block) - var(--title-drop));}
     /* the box is shorter than its content on a two-line title, and flex items shrink to
