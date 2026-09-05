@@ -376,8 +376,8 @@
      margin-top is the deliberate bias on top of that - see --hero-drop. It survives the
      algebra above untouched: the mt/2 term is independent of the kicker cancellation. */
   .v-port .hero-block{padding-left:0;margin-top:var(--hero-drop);margin-bottom:var(--kicker-block);}
-  /* 566+: the wordmark drops 0.62 of a line of its own type, and .p-info's --title-drop
-     carries the same 0.62 so the project titles move with it (1.44 = 0.82 + 0.62).
+  /* 566+: the wordmark drops 0.55 of a line of its own type, and .p-info's --title-drop
+     carries the same 0.55 so the project titles move with it (1.37 = 0.82 + 0.55).
      A full line was tried and left the wordmark 1.4px off the info bar - see the
      clearance note in CLAUDE.md before moving it further. Added to the top margin and taken
      off the bottom, which moves the block by exactly --line-drop - on the top margin alone
@@ -389,7 +389,7 @@
        boundary is nothing against the ~127px one the hero's own vertical regime already
        takes there. */
     .v-port{--kicker-mb:16px;}
-    .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.62);
+    .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.55);
       margin-top:calc(var(--hero-drop) + var(--line-drop));
       margin-bottom:calc(var(--kicker-block) - var(--line-drop));}
   }
@@ -551,15 +551,15 @@
        hero never had this: .hero-block stretches, so the h1's overhang is well inside it. */
     .v-port .panel--project .p-info{position:relative;justify-self:stretch;gap:0;max-width:none;
       height:calc(var(--kicker-block) + var(--hero-size) * 1.64);
-      /* A line and three quarters down. The first full line lands the title exactly
+      /* A line and a bit over a half down. The first full line lands the title exactly
          where the wordmark's SECOND line sits - the box is the wordmark's two lines and
-         the titles are one, so top-aligned they read high against it. The remaining 0.62
+         the titles are one, so top-aligned they read high against it. The remaining 0.55
          is the shared move down that .hero-block also takes (--line-drop below), which is
          what keeps the two in step - change one and you must change the other. Added to the top margin and taken off the bottom one,
          which moves the block by exactly --title-drop - put it on the top margin alone and
          a centred item moves by half. The whole block moves, lag line included, so the
          gap between the two stays the hero's. */
-      --title-drop:calc(var(--hero-size) * 1.44);
+      --title-drop:calc(var(--hero-size) * 1.37);
       margin-top:calc(var(--hero-drop) + var(--title-drop));
       margin-bottom:calc(var(--kicker-block) - var(--title-drop));}
     /* the box is shorter than its content on a two-line title, and flex items shrink to
@@ -584,7 +584,7 @@
        again. Horizontal clearance is not achievable at all while the phone is centred -
        at 1512 the Porcupine title's ink already ends past the frame's centre line. */
     .v-port .panel--project .p-phone{position:absolute;inset:0;margin:auto;
-      height:max-content;width:min(165px,40cqb);max-width:none;}
+      height:max-content;width:min(200px,40cqb);max-width:none;}
   }
   .v-port .p-info .short{display:none;}
 
