@@ -562,7 +562,11 @@
      as a soft edge rather than a hard second copy of the glyph. Not rotated, so positive =
      down-right. Colour is the ring pink darkened, not the old
      #a8b0bd grey-blue, which was tuned for the teal panel this layout replaced. */
-  .v-port .panel[data-idx="0"] .p-info .role{color:var(--ink);text-shadow:0.5px 0.5px 0 rgba(104,36,71,.45);}
+  /* Offset 1.5px, not 0.5 - the shadow reads at a glance now rather than only up close.
+     The rail carries its own version of this at line ~185 for the same panel; that one
+     is hidden above 565, so it is left alone rather than changed where only a phone
+     would see it. */
+  .v-port .panel[data-idx="0"] .p-info .role{color:var(--ink);text-shadow:1.5px 1.5px 0 rgba(104,36,71,.45);}
   .v-port .panel[data-idx="0"] .p-info .role .acc{color:#e7519d;}
   .v-port .panel[data-idx="1"] .p-info .role{color:var(--dim);}
   .v-port .panel[data-idx="0"] .p-info .cta,.v-port .panel[data-idx="0"] .p-info .cta *{color:#1fcbc4;}
