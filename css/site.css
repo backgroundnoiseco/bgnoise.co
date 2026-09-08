@@ -524,11 +524,13 @@
      tracks the type. The h1 is left-aligned, so this widens the box without moving the
      text. */
   .v-port .panel h1{padding-right:0.05em;font-family:"Distortion",serif;font-size:var(--hero-size);line-height:.82;margin:0;color:var(--ink);letter-spacing:-.015em;font-weight:400;position:relative;width:max-content;max-width:100%;}
-  /* No LEFT padding: the second line sits flush under the first. It used to carry .3em,
-     which indented "Noise Co." 25.5px at the cap. The .1em on the right stays - this
-     face's glyphs overhang their advance width, and that is the line's own version of
-     the padding-right on the h1. */
-  .v-port .panel h1 em{font-style:normal;display:block;padding:0 .1em 0 0;}
+  .v-port .panel h1 em{font-style:normal;display:block;padding:0 .1em 0 .3em;}
+  /* 566+ only: the second line sits flush under the first. The .3em above indents
+     "Noise Co." - 25.5px at the cap, 16.8 at 360 - and mobile keeps it. The .1em on
+     the right stays either way: that is this line's version of the padding-right on
+     the h1, for the ink this face overhangs its advance width by. Must sit after the
+     base rule, same specificity. */
+  @media (min-width:566px){ .v-port .panel h1 em{padding-left:0;} }
   .v-port .panel h1 em .dim{color:var(--dim);}
   .v-port .panel h1 em .acc{color:#a89a7d;}
 
