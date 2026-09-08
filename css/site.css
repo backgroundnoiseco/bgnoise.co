@@ -455,6 +455,14 @@
        boundary is nothing against the ~127px one the hero's own vertical regime already
        takes there. */
     .v-port{--kicker-mb:16px;
+      /* A px ramp, not a multiple of --hero-size. As an em it shrank on narrow windows, so
+         the title came down less and its distance to the divider GREW as the window
+         narrowed - 42.1px at 566 against 31.0 at the cap. Fitted instead so that distance
+         is CONSTANT: the drop-free clearance measures 84.36 / 86.64 / 88.8 at 566 / 900 /
+         the cap, and this is that minus the 31px the gap should hold everywhere.
+         Lives on .v-port, not .hero-block, because .p-info's --title-drop is built from it
+         too - that is what keeps the wordmark and the project titles in step. */
+      --line-drop:clamp(53.36px, calc(51.7776px + var(--kf-x) * 0.0076817), 57.8px);
       /* The rail is hidden up here, so the left edge tightens by 25px to match.
          --bar-pad-l is the one knob: the bar's padding, its rule, the tagline/feats and
          the titles all read it, so they move as a unit and the titles stay on the rule.
@@ -463,7 +471,7 @@
          This has to sit after the base .v-port block: same specificity, so an override
          placed earlier in the file loses (it did, on the first attempt). */
       --bar-pad-l:clamp(15px, calc(23px + var(--kf-x) * -0.01020408), 23px);}
-    .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.68);
+    .v-port .hero-block{
       margin-top:calc(var(--hero-drop) + var(--line-drop));
       margin-bottom:calc(var(--kicker-block) - var(--line-drop));}
   }
@@ -615,8 +623,8 @@
      so the bar's HEIGHT is unchanged, which is what keeps .frame, the wordmark and the
      16:9 ring anchor out of it. Change one and you must refit the other. */
   @media (min-width:566px){
-    .v-port{--bar-pad-b:clamp(34.3px, calc(25.97px + var(--kf-x) * 0.04047736), 57.7px);}
-    .v-port .p-sub{padding-top:clamp(26.3px, calc(42.03px + var(--kf-x) * -0.0200692), 37.9px);}
+    .v-port{--bar-pad-b:clamp(45.7px, calc(41.5px + var(--kf-x) * 0.02040816), 57.5px);}
+    .v-port .p-sub{padding-top:26.5px;}
   }
   .v-port .p-sub .feats li{position:relative;padding-left:1.35em;white-space:nowrap;}
   .v-port .p-sub .feats li::before{content:"+";position:absolute;left:0;top:0;opacity:.45;}
@@ -662,7 +670,7 @@
          which moves the block by exactly --title-drop - put it on the top margin alone and
          a centred item moves by half. The whole block moves, lag line included, so the
          gap between the two stays the hero's. */
-      --title-drop:calc(var(--hero-size) * 1.50);
+      --title-drop:calc(var(--hero-size) * 0.82 + var(--line-drop));
       margin-top:calc(var(--hero-drop) + var(--title-drop));
       margin-bottom:calc(var(--kicker-block) - var(--title-drop));}
     /* the box is shorter than its content on a two-line title, and flex items shrink to
