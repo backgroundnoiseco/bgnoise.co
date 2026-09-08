@@ -435,7 +435,7 @@
      algebra above untouched: the mt/2 term is independent of the kicker cancellation. */
   .v-port .hero-block{padding-left:0;margin-top:var(--hero-drop);margin-bottom:var(--kicker-block);}
   /* 566+: the wordmark drops 0.55 of a line of its own type, and .p-info's --title-drop
-     carries the same 0.55 so the project titles move with it (1.37 = 0.82 + 0.55).
+     carries the same 0.60 so the project titles move with it (1.42 = 0.82 + 0.60).
      A full line was tried and left the wordmark 1.4px off the info bar - see the
      clearance note in CLAUDE.md before moving it further. Added to the top margin and taken
      off the bottom, which moves the block by exactly --line-drop - on the top margin alone
@@ -455,7 +455,7 @@
          This has to sit after the base .v-port block: same specificity, so an override
          placed earlier in the file loses (it did, on the first attempt). */
       --bar-pad-l:clamp(15px, calc(23px + var(--kf-x) * -0.01020408), 23px);}
-    .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.55);
+    .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.60);
       margin-top:calc(var(--hero-drop) + var(--line-drop));
       margin-bottom:calc(var(--kicker-block) - var(--line-drop));}
   }
@@ -513,11 +513,6 @@
   /* Projects now carry the same two metadata pairs as the hero, so they inherit .meta's
      stacked layout unchanged; only the description is resized to hold the bar's height. */
   .v-port .p-sub .tag{font-family:"DM Serif Display",serif;font-size:var(--bar-tag-size);line-height:1.2;letter-spacing:-.005em;margin:0 0 0 var(--rule-indent);padding:0 0 0 clamp(16px, calc(16px + var(--kf-x) * 0.00510205), 20px);border-left:1px solid rgba(234,230,220,0.25);max-width:24ch;color:var(--ink);font-weight:400;}
-  /* A block rather than a <br> so it can carry the gap. Watch the info bar's 86px
-     budget when touching this: the tagline is the hero row's tallest block after
-     .meta, and going past it makes the bar - and every concentric ring with it -
-     resize. Three lines plus this gap measure ~78px at the cap. */
-  .v-port .p-sub .tag .est{display:block;margin-top:.35em;}
   .v-port .p-sub .meta{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:grid;row-gap:4px;white-space:nowrap;text-align:right;margin:0;}
   .v-port .p-sub .meta b{color:var(--ink);font-weight:400;font-size:13px;text-transform:none;letter-spacing:.02em;}
   /* size and gap live in vars on .panel--hero so .hero-block can cancel them out - see the
@@ -628,15 +623,15 @@
        hero never had this: .hero-block stretches, so the h1's overhang is well inside it. */
     .v-port .panel--project .p-info{position:relative;justify-self:stretch;gap:0;max-width:none;
       height:calc(var(--kicker-block) + var(--hero-size) * 1.64);
-      /* A line and a bit over a half down. The first full line lands the title exactly
+      /* A line and six tenths down. The first full line lands the title exactly
          where the wordmark's SECOND line sits - the box is the wordmark's two lines and
-         the titles are one, so top-aligned they read high against it. The remaining 0.55
+         the titles are one, so top-aligned they read high against it. The remaining 0.60
          is the shared move down that .hero-block also takes (--line-drop below), which is
          what keeps the two in step - change one and you must change the other. Added to the top margin and taken off the bottom one,
          which moves the block by exactly --title-drop - put it on the top margin alone and
          a centred item moves by half. The whole block moves, lag line included, so the
          gap between the two stays the hero's. */
-      --title-drop:calc(var(--hero-size) * 1.37);
+      --title-drop:calc(var(--hero-size) * 1.42);
       margin-top:calc(var(--hero-drop) + var(--title-drop));
       margin-bottom:calc(var(--kicker-block) - var(--title-drop));}
     /* the box is shorter than its content on a two-line title, and flex items shrink to
