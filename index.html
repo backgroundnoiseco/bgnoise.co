@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css?v=187">
+<link rel="stylesheet" href="css/site.css?v=189">
 </head>
 <body>
 
@@ -26,7 +26,16 @@
   <div class="v-port">
     <header class="p-top">
       <div class="mark">bgnoiseco.</div>
-      <nav><a href="#">Contact</a></nav>
+      <nav class="p-contact" aria-label="Contact">
+        <!-- The two options sit absolutely to the LEFT of the button, so opening them
+             does not push "Contact" off its own edge. Order matters: Instagram is the
+             outer one, the email the inner one, and the stagger runs inner-first. -->
+        <span class="fan">
+          <a href="https://instagram.com/bgnoiseco" target="_blank" rel="noopener">Instagram</a>
+          <a class="email" data-a="YWE=" data-b="YmFja2dyb3VuZG5vaXNlY28uY29t"></a>
+        </span>
+        <button type="button" class="contact-btn" aria-expanded="false">Contact</button>
+      </nav>
     </header>
 
     <nav class="p-rail" aria-label="Sections"><button type="button" class="on" aria-current="true" data-s="hero">00 Title</button><button type="button" data-s="1">01 Shadowbox</button><button type="button" data-s="0">02 Unicorn Porcupine</button><template data-disabled="prosession"><button type="button" data-s="2">03 Prosession</button></template><button type="button" data-s="contact">03 Contact</button></nav>
@@ -164,6 +173,10 @@
       <template data-disabled="prosession"><div class="snap" aria-hidden="true" style="--n:3"></div></template>
     </div>
 
+    <!-- Contact section removed: its Instagram and email links moved into the
+         header's Contact fan-out. Kept here for reference - "Est. 2025" and the
+         "Located: North Carolina" line now appear nowhere else on the page. -->
+    <template data-disabled="outro">
     <section class="p-outro" data-idx="contact" aria-label="Contact">
       <h2 class="sr-only">Contact</h2>
       <div class="contact">
@@ -175,6 +188,7 @@
         </dl>
       </div>
     </section>
+    </template>
     </main>
 
     <footer class="p-foot">
@@ -185,7 +199,7 @@
   </div>
 </div>
 
-<script src="js/site.js?v=187"></script>
+<script src="js/site.js?v=189"></script>
 
 </body>
 </html>

@@ -329,11 +329,32 @@
       root.scrollTo({top: trackTop + (i / st.last) * travel, behavior:SCROLL_BEHAVIOR});
     }
     document.querySelectorAll('.v-port .p-rail button').forEach(s => {
-      s.addEventListener('click', () => go(s.dataset.s));
+      s.addEventListener('click', () => s.dataset.s === 'contact' ? setFan(true) : go(s.dataset.s));
     });
-    const contactLink = document.querySelector('.v-port .p-top nav a');
-    if (contactLink) {
-      contactLink.addEventListener('click', (e) => { e.preventDefault(); go('contact'); });
+    // Contact fan-out. There is no contact SECTION any more - the header's button reveals
+    // the Instagram and email links instead, and the rail's Contact entry opens the same
+    // thing rather than scrolling to a target that no longer exists.
+    const fanNav = document.querySelector('.v-port .p-contact');
+    const fanBtn = fanNav && fanNav.querySelector('.contact-btn');
+    function setFan(open){
+      if (!fanNav) return;
+      fanNav.dataset.open = open ? 'true' : 'false';
+      fanBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    if (fanBtn) {
+      setFan(false);
+      fanBtn.addEventListener('click', e => {
+        e.stopPropagation();                       // or the document handler closes it again
+        setFan(fanNav.dataset.open !== 'true');
+      });
+      // click anywhere else, or Escape, closes it - but not a click on the links themselves,
+      // which have to survive long enough to follow
+      document.addEventListener('click', e => {
+        if (!fanNav.contains(e.target)) setFan(false);
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && fanNav.dataset.open === 'true') { setFan(false); fanBtn.focus(); }
+      });
     }
     const toTop = document.querySelector('.v-port .p-foot .to-top');
     if (toTop) {
