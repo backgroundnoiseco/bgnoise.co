@@ -602,6 +602,20 @@
      for free; this makes the grid do the same. Must sit after the base rule - equal
      specificity. Mobile keeps center, where the list is a one-column stack. */
   @media (min-width:566px){ .v-port .p-sub .feats{align-content:start;} }
+  /* 566+: the bar's top padding TRACKS the titles' clearance, so the gap above the divider
+     and the gap below it are the same at every desktop width. The clearance is linear in
+     --kf-x (29.9px at 566, 20.9 at 900, 14.3 at the cap - and interpolation predicts 20.89,
+     so it really is a straight line), which is the only reason a linear ramp can match it.
+     Fitted to the wordmark: padding-top = clearance + 2, the 2 being how far this face's
+     ink overshoots the tagline's line box, which measures the same at every width.
+     The base 28 -> 37 ramp still applies below 566, where mobile has its own composition.
+     --bar-pad-b takes the exact complement - the two still sum to 68 + kf * 0.02040816 -
+     so the bar's HEIGHT is unchanged, which is what keeps .frame, the wordmark and the
+     16:9 ring anchor out of it. Change one and you must refit the other. */
+  @media (min-width:566px){
+    .v-port{--bar-pad-b:clamp(40.3px, calc(30.54px + var(--kf-x) * 0.04739778), 67.7px);}
+    .v-port .p-sub{padding-top:clamp(16.3px, calc(37.46px + var(--kf-x) * -0.02698962), 31.9px);}
+  }
   .v-port .p-sub .feats li{position:relative;padding-left:1.35em;white-space:nowrap;}
   .v-port .p-sub .feats li::before{content:"+";position:absolute;left:0;top:0;opacity:.45;}
   /* Panel description: the body copy that used to sit in the bar. Sized in cqb so it
