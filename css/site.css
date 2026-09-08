@@ -559,15 +559,15 @@
      rings, and at 2.78:1 it was getting lost - the offset gives the glyph edges definition
      without darkening the letterform itself. Not rotated, so positive = down-right.
      1.5px, not the original 0.5 (one device pixel on a 2x display): at half a pixel it
-     only read up close. Colour is #1fcbc4 at 45% alpha - this panel's own accent, the
-     same value as its --section-bg and its CTA, so the offset reads as part of the
-     Porcupine palette against the pink rings rather than as a generic drop shadow. It
-     has also been the plum rgba(104,36,71,.45) and, before that, an #a8b0bd grey-blue
-     tuned for a teal panel this layout replaced - don't restore either.
+     only read up close. Colour is the ring pink darkened, at 45% alpha, so it reads as a
+     soft edge rather than a hard second copy of the glyph. Two other colours have been
+     tried and rejected here: the panel's own cyan accent #1fcbc4 (its --section-bg and
+     CTA colour - it does not work on this title) and an #a8b0bd grey-blue tuned for a
+     teal panel this layout replaced. Don't restore either.
      The rail carries its own version of this at line ~185 for the same panel; that one
      is hidden above 565, so it is left alone rather than changed where only a phone
      would see it. */
-  .v-port .panel[data-idx="0"] .p-info .role{color:var(--ink);text-shadow:1.5px 1.5px 0 rgba(31,203,196,.45);}
+  .v-port .panel[data-idx="0"] .p-info .role{color:var(--ink);text-shadow:1.5px 1.5px 0 rgba(104,36,71,.45);}
   .v-port .panel[data-idx="0"] .p-info .role .acc{color:#e7519d;}
   .v-port .panel[data-idx="1"] .p-info .role{color:var(--dim);}
   .v-port .panel[data-idx="0"] .p-info .cta,.v-port .panel[data-idx="0"] .p-info .cta *{color:#1fcbc4;}
