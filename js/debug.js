@@ -32,11 +32,54 @@
   const panel    = mk(`left:12px;bottom:12px;color:#eae6dc;background:rgba(10,10,10,.94);
     border:1px solid #333;padding:8px 10px;white-space:pre;border-radius:4px;`);
 
-  const ink = el => { const r = document.createRange(); r.selectNodeContents(el);
-    const rects = [...r.getClientRects()];
-    if (!rects.length) return null;
-    return {left:Math.min(...rects.map(x=>x.left)), right:Math.max(...rects.map(x=>x.right)),
-            top:Math.min(...rects.map(x=>x.top)), bottom:Math.max(...rects.map(x=>x.bottom))}; };
+  /* REAL ink, not line boxes. Range.getClientRects() returns LINE boxes - they carry the
+     font's leading, so their top and bottom sit well away from the glyphs, and measuring
+     against them is what made two gaps that measure equal look nothing like it.
+
+     So: split the element into visual lines a character at a time, then for the line in
+     question ask a canvas for that line's actual glyph extents. CSS puts the baseline at
+     lineTop + (lineHeight - (fontAscent + fontDescent)) / 2 + fontAscent, and
+     actualBoundingBoxAscent/Descent give the ink either side of it. Per LINE, because the
+     descender in "Background" is not on the same line as "Noise Co." and using the whole
+     string's extents would put the wordmark's ink bottom ~20px too low. */
+  const cv = document.createElement('canvas').getContext('2d');
+
+  function visualLines(el){
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const groups = new Map();
+    let n;
+    while ((n = w.nextNode())) {
+      for (let i = 0; i < n.length; i++) {
+        const r = document.createRange(); r.setStart(n, i); r.setEnd(n, i + 1);
+        const b = r.getBoundingClientRect();
+        if (!b.width && !b.height) continue;
+        const key = Math.round(b.top);
+        if (!groups.has(key)) groups.set(key, {text:'', left:b.left, right:b.right, top:b.top, bottom:b.bottom});
+        const g = groups.get(key);
+        g.text += n.data[i];
+        g.left = Math.min(g.left, b.left); g.right = Math.max(g.right, b.right);
+        g.top = Math.min(g.top, b.top);    g.bottom = Math.max(g.bottom, b.bottom);
+      }
+    }
+    return [...groups.values()].sort((a, b) => a.top - b.top);
+  }
+
+  function inkOfLine(el, line){
+    const cs = getComputedStyle(el);
+    cv.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    const m = cv.measureText(line.text.trim() || line.text);
+    const fa = m.fontBoundingBoxAscent, fd = m.fontBoundingBoxDescent;
+    if (!(fa || fd)) return {top:line.top, bottom:line.bottom, left:line.left, right:line.right};
+    const lineH = line.bottom - line.top;
+    const baseline = line.top + (lineH - (fa + fd)) / 2 + fa;
+    return {left:line.left, right:line.right,
+            top:baseline - m.actualBoundingBoxAscent,
+            bottom:baseline + m.actualBoundingBoxDescent};
+  }
+
+  // last visual line for a title (its bottom faces the divider), first for a description
+  const inkLast  = el => { const L = visualLines(el); return L.length ? inkOfLine(el, L[L.length-1]) : null; };
+  const inkFirst = el => { const L = visualLines(el); return L.length ? inkOfLine(el, L[0]) : null; };
 
   const place = (el, b) => { el.style.left = b.left+'px'; el.style.top = b.top+'px';
     el.style.width = Math.max(0,b.right-b.left)+'px'; el.style.height = Math.max(0,b.bottom-b.top)+'px'; };
@@ -59,7 +102,7 @@
     // title = the wordmark on the hero row, the project name on the others
     const titleEl = pan.querySelector('h1') || pan.querySelector('.role');
     const descEl  = sub.querySelector('.tag') || sub.querySelector('.feats');
-    const t = titleEl && ink(titleEl), dsc = descEl && ink(descEl);
+    const t = titleEl && inkLast(titleEl), dsc = descEl && inkFirst(descEl);
 
     divider.style.left = fr.left+'px'; divider.style.top = br.top+'px';
     divider.style.width = fr.width+'px'; divider.style.height = '0px';
