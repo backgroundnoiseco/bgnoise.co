@@ -100,7 +100,7 @@
   .v-port .p-top,.v-port .frame,.v-port .p-sub,.v-port .p-outro,.v-port .p-foot{background:linear-gradient(to right,var(--gutterC,#000) 0,var(--gutterC,#000) var(--cap),var(--section-bg,#0a0a0a) var(--cap),var(--section-bg,#0a0a0a) calc(100% - var(--cap)),var(--gutterC,#000) calc(100% - var(--cap)),var(--gutterC,#000) 100%);}
   .v-port *{box-sizing:border-box;}
   .v-port a{color:inherit;text-decoration:none;}
-  .v-port .p-top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:18px calc(var(--cap) + clamp(24px, calc(24px + var(--kf-x) * 0.01020408), 32px));border-bottom:1px solid var(--hairline);}
+  .v-port .p-top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:18px calc(var(--cap) + clamp(24px, calc(24px + var(--kf-x) * 0.01020408), 32px));}
   .v-port .p-top .mark{font-family:"Distortion",serif;font-size:22px;letter-spacing:.02em;color:var(--ink);}
   .v-port .p-top nav{display:flex;gap:20px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
   .v-port .p-top nav a.on{color:var(--ink);}
@@ -196,7 +196,14 @@
   /* .frame is the size container: vertical sizing inside panels uses cqb (the frame's
      height is what actually constrains them, via the sticky stage), while horizontal
      layout stays on viewport @media because the content column is viewport-capped. */
-  .v-port .frame{position:relative;flex:1;min-height:0;overflow:hidden;border-bottom:1px solid var(--hairline);container-type:size;container-name:frame;}
+  /* No border-bottom here, and none on .p-top or .p-sub either: the three --hairline rules
+     that used to outline the header and the info bar were removed. #181615 on black read as
+     a faint grey line at each edge, and the boundary between the frame and the bar is
+     already carried by the background change. --hairline itself stays - the footer's top
+     edge and the disabled ticker/outro still use it. Removing them made the frame's content
+     box 3px taller (1 from each border), which is why the ring area's 16:9 anchor height
+     moved 885 -> ~882 and the wordmark sits 0.5px lower. */
+  .v-port .frame{position:relative;flex:1;min-height:0;overflow:hidden;container-type:size;container-name:frame;}
   /* transform creates a stacking context, so the panel itself must clear the ::after
      decoration (z-index 1) — a z-index on its children would be trapped inside. */
   /* BASELINE (mobile) - the whole panel slides through the frame, which is what this has
@@ -461,10 +468,13 @@
          is CONSTANT: the drop-free clearance measures 84.36 / 86.64 / 88.8 at 566 / 900 /
          the cap, and this is that minus the 35px the gap should hold everywhere (it was
          fitted at 33 and then raised 2px by eye - subtract from all three numbers, never
-         from one, or the constant-with-width property goes with it).
+         from one, or the constant-with-width property goes with it). All three then took
+         +0.5 when the header/frame/bar hairlines came off: that made the frame 3px taller
+         and moved the bar's top edge 1px down, which handed the title 0.5px it had not
+         been given.
          Lives on .v-port, not .hero-block, because .p-info's --title-drop is built from it
          too - that is what keeps the wordmark and the project titles in step. */
-      --line-drop:clamp(49.36px, calc(47.7776px + var(--kf-x) * 0.0076817), 53.8px);
+      --line-drop:clamp(49.86px, calc(48.2776px + var(--kf-x) * 0.0076817), 54.3px);
       /* The rail is hidden up here, so the left edge tightens by 25px to match.
          --bar-pad-l is the one knob: the bar's padding, its rule, the tagline/feats and
          the titles all read it, so they move as a unit and the titles stay on the rule.
@@ -522,7 +532,7 @@
   .v-port .p-sub{--bar-tag-size:clamp(18px,calc(18px + var(--kf-x) * 0.00127551),19px);--bar-rule-h:calc(2.4 * var(--bar-tag-size));display:grid;padding:clamp(28px,calc(28px + var(--kf-x) * 0.01147959),37px)
             calc(var(--cap) + clamp(24px, calc(24px + var(--kf-x) * 0.01020408), 32px))
             var(--bar-pad-b)
-            calc(var(--cap) + var(--bar-pad-l));border-bottom:1px solid var(--hairline);}
+            calc(var(--cap) + var(--bar-pad-l));}
   /* one .sub-panel per stage panel, all in the same grid cell so they overlay and the
      container still sizes to the tallest. Opacity is 1 - |i - progress|, so the bar
      cross-fades on exactly the same scroll value that drives the panels. */
