@@ -459,10 +459,10 @@
          the title came down less and its distance to the divider GREW as the window
          narrowed - 42.1px at 566 against 31.0 at the cap. Fitted instead so that distance
          is CONSTANT: the drop-free clearance measures 84.36 / 86.64 / 88.8 at 566 / 900 /
-         the cap, and this is that minus the 31px the gap should hold everywhere.
+         the cap, and this is that minus the 33px the gap should hold everywhere.
          Lives on .v-port, not .hero-block, because .p-info's --title-drop is built from it
          too - that is what keeps the wordmark and the project titles in step. */
-      --line-drop:clamp(53.36px, calc(51.7776px + var(--kf-x) * 0.0076817), 57.8px);
+      --line-drop:clamp(51.36px, calc(49.7776px + var(--kf-x) * 0.0076817), 55.8px);
       /* The rail is hidden up here, so the left edge tightens by 25px to match.
          --bar-pad-l is the one knob: the bar's padding, its rule, the tagline/feats and
          the titles all read it, so they move as a unit and the titles stay on the rule.
@@ -623,8 +623,8 @@
      so the bar's HEIGHT is unchanged, which is what keeps .frame, the wordmark and the
      16:9 ring anchor out of it. Change one and you must refit the other. */
   @media (min-width:566px){
-    .v-port{--bar-pad-b:clamp(45.7px, calc(41.5px + var(--kf-x) * 0.02040816), 57.5px);}
-    .v-port .p-sub{padding-top:26.5px;}
+    .v-port{--bar-pad-b:clamp(43.7px, calc(39.5px + var(--kf-x) * 0.02040816), 55.5px);}
+    .v-port .p-sub{padding-top:28.5px;}
   }
   .v-port .p-sub .feats li{position:relative;padding-left:1.35em;white-space:nowrap;}
   .v-port .p-sub .feats li::before{content:"+";position:absolute;left:0;top:0;opacity:.45;}
