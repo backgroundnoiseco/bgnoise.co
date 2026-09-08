@@ -767,8 +767,18 @@
      feature. The tagline's rule is short, which is why it can carry a heavier value.
      0.5px rather than 1: on a 2x screen that is a single device pixel, the thinnest line
      the display can draw. A non-zero border is clamped to one device pixel rather than
-     dropped, so a 1x screen still gets a line - it just cannot get a thinner one. */
-  .v-port .p-foot{padding:28px var(--gutter);border-top:0.5px solid rgba(234,230,220,.15);display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+     dropped, so a 1x screen still gets a line - it just cannot get a thinner one.
+     It is a ::before rather than a border-top for two reasons. It carries a BLACK 0.5px
+     above the grey 0.5px - #000 against the band's #0a0a0a, so the pair reads as an
+     engraved line rather than a drawn one - which a single border cannot do. And it is
+     inset by --cap at both ends, so it starts and stops exactly where the band does
+     instead of running the full width into the gutters. --cap is the same inset the
+     background gradient on line ~100 uses, so the line's ends track the band's edges at
+     every width for free; below the cap --cap is 0 and it runs edge to edge, which is
+     correct - there are no gutters there to stop at. */
+  .v-port .p-foot{padding:28px var(--gutter);position:relative;display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+  .v-port .p-foot::before{content:"";position:absolute;top:0;left:var(--cap);right:var(--cap);height:1px;
+    background:linear-gradient(to bottom,#000 50%,rgba(234,230,220,.15) 50%);}
   .v-port .p-foot .wm{font-family:"Distortion",serif;font-size:18px;letter-spacing:.02em;color:var(--ink);text-transform:none;}
   .v-port .p-foot .to-top{color:inherit;text-decoration:none;cursor:pointer;}
   .v-port .p-foot .to-top:hover{color:var(--ink);}
