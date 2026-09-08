@@ -49,9 +49,9 @@
                                                                  own x; mobile keeps 60)
          hero pad right         60    ->     32     -0.03571428
          --bar-tag-size         18    ->     19     0.00127551
-         info bar pad top       28    ->     26    -0.00255102   (this and --bar-pad-b
+         info bar pad top       28    ->     19    -0.01147959   (this and --bar-pad-b
          info bar pad right     24    ->     32     0.01020408
-         --bar-pad-b            40    ->     58     0.02295918    trade off - see below)
+         --bar-pad-b            40    ->     65     0.03188775    trade off - see below)
          info bar pad left      48    ->     40     -0.01020408  (--bar-pad-l; 566+
                                                                  overrides it 25 lower,
                                                                  23 -> 15, since the
@@ -96,7 +96,7 @@
          --hero-drop (a margin, which participates in centring and never clips) - it
          shifts the block by HALF its value.
      ====================================================================== */
-  .v-port{--kf-x:calc(100vw - 360px);--ring-step:40px;--bar-pad-b:clamp(40px,calc(40px + var(--kf-x) * 0.02295918),58px);--ink:#eae6dc;--dim:#9c9993;--muted:#777;--hairline:#181615;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--panels:3;--hero-size:clamp(54px,calc(54px + var(--kf-x) * 0.03954081),85px);background:#000;color:var(--ink);font-family:"Inter Tight",ui-sans-serif,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;--maxw:1080px;--gutter:max(32px,calc((100% - var(--maxw)) / 2));--cap:calc(var(--gutter) - 32px);}
+  .v-port{--kf-x:calc(100vw - 360px);--ring-step:40px;--bar-pad-b:clamp(40px,calc(40px + var(--kf-x) * 0.03188775),65px);--ink:#eae6dc;--dim:#9c9993;--muted:#777;--hairline:#181615;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--panels:3;--hero-size:clamp(54px,calc(54px + var(--kf-x) * 0.03954081),85px);background:#000;color:var(--ink);font-family:"Inter Tight",ui-sans-serif,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;--maxw:1080px;--gutter:max(32px,calc((100% - var(--maxw)) / 2));--cap:calc(var(--gutter) - 32px);}
   .v-port .p-top,.v-port .frame,.v-port .p-sub,.v-port .p-outro,.v-port .p-foot{background:linear-gradient(to right,var(--gutterC,#000) 0,var(--gutterC,#000) var(--cap),var(--section-bg,#0a0a0a) var(--cap),var(--section-bg,#0a0a0a) calc(100% - var(--cap)),var(--gutterC,#000) calc(100% - var(--cap)),var(--gutterC,#000) 100%);}
   .v-port *{box-sizing:border-box;}
   .v-port a{color:inherit;text-decoration:none;}
@@ -443,7 +443,7 @@
      algebra above untouched: the mt/2 term is independent of the kicker cancellation. */
   .v-port .hero-block{padding-left:0;margin-top:var(--hero-drop);margin-bottom:var(--kicker-block);}
   /* 566+: the wordmark drops 0.55 of a line of its own type, and .p-info's --title-drop
-     carries the same 0.60 so the project titles move with it (1.42 = 0.82 + 0.60).
+     carries the same 0.68 so the project titles move with it (1.50 = 0.82 + 0.68).
      A full line was tried and left the wordmark 1.4px off the info bar - see the
      clearance note in CLAUDE.md before moving it further. Added to the top margin and taken
      off the bottom, which moves the block by exactly --line-drop - on the top margin alone
@@ -463,7 +463,7 @@
          This has to sit after the base .v-port block: same specificity, so an override
          placed earlier in the file loses (it did, on the first attempt). */
       --bar-pad-l:clamp(15px, calc(23px + var(--kf-x) * -0.01020408), 23px);}
-    .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.60);
+    .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.68);
       margin-top:calc(var(--hero-drop) + var(--line-drop));
       margin-bottom:calc(var(--kicker-block) - var(--line-drop));}
   }
@@ -509,7 +509,7 @@
   /* --bar-rule-h is the hero tagline's rendered height (2 lines at line-height 1.2).
      The project rows' feature list adopts it as a min-height so the divider rule is the
      same length on every bar row instead of shrinking to its own content. */
-  .v-port .p-sub{--bar-tag-size:clamp(18px,calc(18px + var(--kf-x) * 0.00127551),19px);--bar-rule-h:calc(2.4 * var(--bar-tag-size));display:grid;padding:clamp(26px,calc(28px + var(--kf-x) * -0.00255102),28px)
+  .v-port .p-sub{--bar-tag-size:clamp(18px,calc(18px + var(--kf-x) * 0.00127551),19px);--bar-rule-h:calc(2.4 * var(--bar-tag-size));display:grid;padding:clamp(19px,calc(28px + var(--kf-x) * -0.01147959),28px)
             calc(var(--cap) + clamp(24px, calc(24px + var(--kf-x) * 0.01020408), 32px))
             var(--bar-pad-b)
             calc(var(--cap) + var(--bar-pad-l));border-bottom:1px solid var(--hairline);}
@@ -638,15 +638,15 @@
        hero never had this: .hero-block stretches, so the h1's overhang is well inside it. */
     .v-port .panel--project .p-info{position:relative;justify-self:stretch;gap:0;max-width:none;
       height:calc(var(--kicker-block) + var(--hero-size) * 1.64);
-      /* A line and six tenths down. The first full line lands the title exactly
+      /* A line and just over two thirds down. The first full line lands the title exactly
          where the wordmark's SECOND line sits - the box is the wordmark's two lines and
-         the titles are one, so top-aligned they read high against it. The remaining 0.60
+         the titles are one, so top-aligned they read high against it. The remaining 0.68
          is the shared move down that .hero-block also takes (--line-drop below), which is
          what keeps the two in step - change one and you must change the other. Added to the top margin and taken off the bottom one,
          which moves the block by exactly --title-drop - put it on the top margin alone and
          a centred item moves by half. The whole block moves, lag line included, so the
          gap between the two stays the hero's. */
-      --title-drop:calc(var(--hero-size) * 1.42);
+      --title-drop:calc(var(--hero-size) * 1.50);
       margin-top:calc(var(--hero-drop) + var(--title-drop));
       margin-bottom:calc(var(--kicker-block) - var(--title-drop));}
     /* the box is shorter than its content on a two-line title, and flex items shrink to
