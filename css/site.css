@@ -513,6 +513,11 @@
   /* Projects now carry the same two metadata pairs as the hero, so they inherit .meta's
      stacked layout unchanged; only the description is resized to hold the bar's height. */
   .v-port .p-sub .tag{font-family:"DM Serif Display",serif;font-size:var(--bar-tag-size);line-height:1.2;letter-spacing:-.005em;margin:0 0 0 var(--rule-indent);padding:0 0 0 clamp(16px, calc(16px + var(--kf-x) * 0.00510205), 20px);border-left:1px solid rgba(234,230,220,0.25);max-width:24ch;color:var(--ink);font-weight:400;}
+  /* A block rather than a <br> so it can carry the gap. Watch the info bar's 86px
+     budget when touching this: the tagline is the hero row's tallest block after
+     .meta, and going past it makes the bar - and every concentric ring with it -
+     resize. Three lines plus this gap measure ~78px at the cap. */
+  .v-port .p-sub .tag .est{display:block;margin-top:.35em;}
   .v-port .p-sub .meta{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:grid;row-gap:4px;white-space:nowrap;text-align:right;margin:0;}
   .v-port .p-sub .meta b{color:var(--ink);font-weight:400;font-size:13px;text-transform:none;letter-spacing:.02em;}
   /* size and gap live in vars on .panel--hero so .hero-block can cancel them out - see the
