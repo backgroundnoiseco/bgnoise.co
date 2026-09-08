@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css?v=189">
+<link rel="stylesheet" href="css/site.css?v=192">
 </head>
 <body>
 
@@ -31,8 +31,16 @@
              does not push "Contact" off its own edge. Order matters: Instagram is the
              outer one, the email the inner one, and the stagger runs inner-first. -->
         <span class="fan">
-          <a href="https://instagram.com/bgnoiseco" target="_blank" rel="noopener">Instagram</a>
-          <a class="email" data-a="YWE=" data-b="YmFja2dyb3VuZG5vaXNlY28uY29t"></a>
+          <a class="ig" href="https://instagram.com/bgnoiseco" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <rect x="3" y="3" width="18" height="18" rx="5.2"/>
+              <circle cx="12" cy="12" r="4.1"/>
+              <circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <button type="button" class="email" data-a="YWE=" data-b="YmFja2dyb3VuZG5vaXNlY28uY29t"
+                  aria-live="polite"></button>
         </span>
         <button type="button" class="contact-btn" aria-expanded="false">Contact</button>
       </nav>
@@ -199,7 +207,7 @@
   </div>
 </div>
 
-<script src="js/site.js?v=189"></script>
+<script src="js/site.js?v=192"></script>
 
 </body>
 </html>

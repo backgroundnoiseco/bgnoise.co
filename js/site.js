@@ -1,8 +1,64 @@
-  // Decode the obfuscated email link (matches the pattern used in index.html)
-  document.querySelectorAll('a.email[data-a][data-b]').forEach(el => {
+  // Decode the obfuscated email (matches the pattern used in index.html). Anchors get a
+  // mailto; the header's is a <button>, which copies instead - see the handler below.
+  document.querySelectorAll('.email[data-a][data-b]').forEach(el => {
     const addr = atob(el.dataset.a) + '@' + atob(el.dataset.b);
-    el.href = 'mailto:' + addr;
+    if (el.tagName === 'A') el.href = 'mailto:' + addr;
     el.textContent = addr;
+  });
+
+  // Click-to-copy for the header's address.
+  document.querySelectorAll('button.email[data-a][data-b]').forEach(btn => {
+    const addr = btn.textContent;
+    let t = 0;
+    // execCommand is deprecated but it is the only path that works without a secure
+    // context (file://, plain http) AND the only fallback when writeText rejects - which
+    // it does without transient user activation, or if the permission is denied.
+    function legacyCopy(text){
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
+      ta.remove();
+      return ok;
+    }
+    function copy(text){
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text)
+          .catch(() => { if (!legacyCopy(text)) throw new Error('copy unavailable'); });
+      }
+      return legacyCopy(text) ? Promise.resolve() : Promise.reject(new Error('copy unavailable'));
+    }
+    // Last resort: put the address in the user's selection so their own Cmd/Ctrl+C works.
+    function selectSelf(el){
+      try {
+        const r = document.createRange(); r.selectNodeContents(el);
+        const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      } catch (_) {}
+    }
+    btn.addEventListener('click', e => {
+      e.stopPropagation();                       // the fan's outside-click handler
+      // Pin the width before the label changes, or the right-anchored fan reflows for as
+      // long as the feedback shows.
+      btn.style.minWidth = btn.offsetWidth + 'px';
+      copy(addr).then(() => {
+        btn.textContent = 'copied';
+        btn.dataset.copied = 'true';
+      }).catch(() => {
+        // Both paths refused. Select the address in place so the user's own Cmd/Ctrl+C
+        // works - and only say so if the selection actually took. Claiming "copied" when
+        // nothing was copied is worse than showing no feedback at all.
+        selectSelf(btn);
+        if (String(getSelection() || '').indexOf('@') >= 0) {
+          btn.textContent = 'press \u2318C';
+          btn.dataset.copied = 'true';
+        }
+      }).finally(() => {
+        clearTimeout(t);
+        t = setTimeout(() => { btn.textContent = addr; delete btn.dataset.copied; }, 1400);
+      });
+    });
   });
 
 
