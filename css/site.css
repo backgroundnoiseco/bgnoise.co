@@ -635,13 +635,7 @@
   .v-port .p-sub .feats{list-style:none;
     display:grid;grid-auto-flow:column;grid-template-rows:repeat(3,auto);column-gap:clamp(20px, calc(20px + var(--kf-x) * 0.0127551), 30px);row-gap:8px;
     align-content:center;min-height:var(--bar-rule-h);
-    /* The hero tagline's face, not --mono: the bar's left slot reads as one voice whether
-       the row is the hero's sentence or a project's list. Family and tracking only - the
-       SIZE stays on its own 9->11px ramp, because .meta is a constant 86px and is what
-       sets the bar's height. Six rows of 18px tagline type would be 139px stacked in the
-       mobile column and the bar's height would start tracking the list instead, which
-       resizes every concentric ring (see the max-width:599px block). */
-    font-family:"DM Serif Display",serif;font-size:clamp(9px, calc(9px + var(--kf-x) * 0.00255102), 11px);line-height:1.5;letter-spacing:-.005em;color:var(--ink);
+    font-family:var(--mono);font-size:clamp(9px, calc(9px + var(--kf-x) * 0.00255102), 11px);line-height:1.5;letter-spacing:.02em;color:var(--ink);
     /* same divider anchor as the hero's tagline, and deliberately the same margin/padding
        so the rule sits at one x-position across every bar row - otherwise it shifts
        sideways as you scroll from the hero to a project */
@@ -783,10 +777,8 @@
      every width for free; below the cap --cap is 0 and it runs edge to edge, which is
      correct - there are no gutters there to stop at. */
   .v-port .p-foot{padding:28px var(--gutter);position:relative;display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
-  /* TEMPORARY - the top half is #ff3b6b instead of #000 so the line's position and extent
-     are visible while it is being checked. Put it back to #000 before this ships. */
   .v-port .p-foot::before{content:"";position:absolute;top:0;left:var(--cap);right:var(--cap);height:1px;
-    background:linear-gradient(to bottom,#ff3b6b 50%,rgba(234,230,220,.15) 50%);}
+    background:linear-gradient(to bottom,#000 50%,rgba(234,230,220,.15) 50%);}
   .v-port .p-foot .wm{font-family:"Distortion",serif;font-size:18px;letter-spacing:.02em;color:var(--ink);text-transform:none;}
   .v-port .p-foot .to-top{color:inherit;text-decoration:none;cursor:pointer;}
   .v-port .p-foot .to-top:hover{color:var(--ink);}
