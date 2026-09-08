@@ -190,6 +190,10 @@ Load any page with **`?debug`** and `js/site.js` injects `js/debug.js`; without 
 
 **Ink, not boxes.** Every measurement in this area uses `Range.getClientRects()`, because the element boxes sit several px away from the glyphs and tuning against them gives the wrong answer. It follows the cross-fade by reading the same `--progress` the panels do, so scrolling to a project row re-targets it.
 
+**Every stroke straddles the edge it marks.** The elements are `box-sizing: border-box` and each is inflated by 0.5px on all four sides, so a 1px border lands half in, half out. Without that a content-box border paints entirely *outside* the rect it was given: the ink boxes read 1px large on every side and the divider sat 0.5px down inside the bar. The readout numbers were right the whole time — the *drawing* was off — but the strokes are what a 2px nudge gets judged against, so they have to be honest.
+
+`js/site.js` injects it as `js/debug.js?t=<Date.now()>`, cache-busted on every load. `index.html`'s `?v=` covers `site.css`/`site.js` and nothing versions this one; a stale overlay is worse than no overlay, and it is dev-only so the extra request costs the live page nothing.
+
 It redraws **synchronously** on scroll and resize as well as scheduling a short rAF loop — rAF is throttled in a background tab, and an overlay that silently stops tracking is worse than none.
 
 ## Tuning overlay (`js/tune.js`)

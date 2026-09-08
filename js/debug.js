@@ -20,9 +20,16 @@
     font:10px/1.35 ui-monospace,Menlo,monospace;`;
   document.body.appendChild(layer);
 
+  /* border-box, because every stroke here is drawn to STRADDLE the edge it marks rather
+     than sit beside it. A 1px border on a content-box element paints entirely outside the
+     rect it was given, so the ink boxes read 1px large on all four sides and the divider
+     sat 0.5px inside the bar - which is exactly the size of the nudges being made against
+     it. Each stroke is now centred on its edge: inflate by 0.5 on every side and let the
+     1px border land half in, half out. */
   const mk = css => { const el = document.createElement('div');
-    el.style.cssText = 'position:fixed;pointer-events:none;' + css;
+    el.style.cssText = 'position:fixed;pointer-events:none;box-sizing:border-box;' + css;
     layer.appendChild(el); return el; };
+  const HALF = 0.5;  // half the 1px stroke
 
   const divider  = mk('height:0;border-top:1px dashed #ff3b6b;');
   const titleBox = mk('border:1px solid #1fcbc4;');
@@ -81,8 +88,9 @@
   const inkLast  = el => { const L = visualLines(el); return L.length ? inkOfLine(el, L[L.length-1]) : null; };
   const inkFirst = el => { const L = visualLines(el); return L.length ? inkOfLine(el, L[0]) : null; };
 
-  const place = (el, b) => { el.style.left = b.left+'px'; el.style.top = b.top+'px';
-    el.style.width = Math.max(0,b.right-b.left)+'px'; el.style.height = Math.max(0,b.bottom-b.top)+'px'; };
+  const place = (el, b) => { el.style.left = (b.left - HALF)+'px'; el.style.top = (b.top - HALF)+'px';
+    el.style.width = (Math.max(0,b.right-b.left) + 2*HALF)+'px';
+    el.style.height = (Math.max(0,b.bottom-b.top) + 2*HALF)+'px'; };
 
   // Which row is on screen: the panels cross-fade, so read the same --progress they do.
   function activeIndex(){
@@ -104,7 +112,7 @@
     const descEl  = sub.querySelector('.tag') || sub.querySelector('.feats');
     const t = titleEl && inkLast(titleEl), dsc = descEl && inkFirst(descEl);
 
-    divider.style.left = fr.left+'px'; divider.style.top = br.top+'px';
+    divider.style.left = fr.left+'px'; divider.style.top = (br.top - HALF)+'px';
     divider.style.width = fr.width+'px'; divider.style.height = '0px';
 
     let above = null, below = null;

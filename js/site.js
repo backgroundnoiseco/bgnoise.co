@@ -575,7 +575,11 @@
   // boxed and labelled. Without the flag the file is never fetched. See js/debug.js.
   if (new URLSearchParams(location.search).has('debug')) {
     const dbg = document.createElement('script');
-    dbg.src = 'js/debug.js';
+    // Cache-busted on every load. index.html's ?v= covers site.css/site.js, but nothing
+    // versions this one, and the overlay is what every spacing decision gets eyeballed
+    // against - a stale copy of it is worse than no copy. It is dev-only, so the extra
+    // request costs the live page nothing.
+    dbg.src = 'js/debug.js?t=' + Date.now();
     document.body.appendChild(dbg);
   }
 
