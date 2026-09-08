@@ -173,6 +173,19 @@ The contact email (now in the header's `.p-contact .fan`) is stored as two base6
 
 The copy has three tiers, and the reason for each is worth keeping: `navigator.clipboard.writeText` needs a secure context *and* transient user activation, so it rejects on `file://`, on plain http, and whenever a click did not actually come from the user; `document.execCommand('copy')` on an off-screen textarea covers those; and if both refuse, the address is selected in place so the reader's own Cmd/Ctrl+C works. **The "copied" label only appears when something actually was copied** — the last tier checks that the selection took before claiming anything, since false feedback on a copy is worse than none. The button's `min-width` is pinned to the address's own width before the label swaps, or the right-anchored fan reflows for the 1.4s it shows.
 
+## Debug outlines (`js/debug.js`)
+
+Load any page with **`?debug`** and `js/site.js` injects `js/debug.js`; without the flag the file is never fetched, so the live page pays nothing for it. It draws the one relationship the hero/bar spacing is tuned on:
+
+- a dashed red line along **the bar's top edge** — the divider
+- a cyan box around the active **title's ink** (the wordmark on the hero row, the project name otherwise) with its distance to that edge
+- a yellow box around the active **description's ink** (the tagline, or the feature list) with its distance
+- a readout with both numbers, their difference, the bar's height and `padding-top`, and the frame's height
+
+**Ink, not boxes.** Every measurement in this area uses `Range.getClientRects()`, because the element boxes sit several px away from the glyphs and tuning against them gives the wrong answer. It follows the cross-fade by reading the same `--progress` the panels do, so scrolling to a project row re-targets it.
+
+It redraws **synchronously** on scroll and resize as well as scheduling a short rAF loop — rAF is throttled in a background tab, and an overlay that silently stops tracking is worse than none.
+
 ## Tuning overlay (`js/tune.js`)
 
 **Currently OFF.** The injector at the bottom of `js/site.js` is commented out, so `?tune` does nothing and `js/tune.js` is never fetched. Uncomment that block to bring it back — the file is kept intact for later.

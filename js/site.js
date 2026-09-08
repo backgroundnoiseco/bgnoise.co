@@ -570,6 +570,15 @@
     vport._bootSnake();
   })();
 
+  // Dev-only debug outlines. Load any page with ?debug to see the bar's top edge as a
+  // dashed divider with the active title's ink bottom and the active description's ink top
+  // boxed and labelled. Without the flag the file is never fetched. See js/debug.js.
+  if (new URLSearchParams(location.search).has('debug')) {
+    const dbg = document.createElement('script');
+    dbg.src = 'js/debug.js';
+    document.body.appendChild(dbg);
+  }
+
   // Dev-only tuning overlay - CURRENTLY OFF. js/tune.js is kept for later; uncomment the
   // block below to bring it back, then load any page with ?tune. It was gated on the query
   // string anyway, so the live page never fetched it either way.
