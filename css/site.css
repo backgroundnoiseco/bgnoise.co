@@ -89,7 +89,7 @@
          shifts the block by HALF its value.
      ====================================================================== */
   .v-port{--kf-x:calc(100vw - 360px);--ring-step:40px;--bar-pad-b:clamp(40px,calc(40px + var(--kf-x) * 0.01020408),48px);--ink:#eae6dc;--dim:#9c9993;--muted:#777;--hairline:#181615;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--panels:3;--hero-size:clamp(54px,calc(54px + var(--kf-x) * 0.03954081),85px);background:#000;color:var(--ink);font-family:"Inter Tight",ui-sans-serif,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;--maxw:1080px;--gutter:max(32px,calc((100% - var(--maxw)) / 2));--cap:calc(var(--gutter) - 32px);}
-  .v-port .p-top,.v-port .frame,.v-port .p-outro,.v-port .p-foot{background:linear-gradient(to right,var(--gutterC,#000) 0,var(--gutterC,#000) var(--cap),var(--section-bg,#0a0a0a) var(--cap),var(--section-bg,#0a0a0a) calc(100% - var(--cap)),var(--gutterC,#000) calc(100% - var(--cap)),var(--gutterC,#000) 100%);}
+  .v-port .p-top,.v-port .frame,.v-port .p-sub,.v-port .p-outro,.v-port .p-foot{background:linear-gradient(to right,var(--gutterC,#000) 0,var(--gutterC,#000) var(--cap),var(--section-bg,#0a0a0a) var(--cap),var(--section-bg,#0a0a0a) calc(100% - var(--cap)),var(--gutterC,#000) calc(100% - var(--cap)),var(--gutterC,#000) 100%);}
   .v-port *{box-sizing:border-box;}
   .v-port a{color:inherit;text-decoration:none;}
   .v-port .p-top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:18px calc(var(--cap) + clamp(24px, calc(24px + var(--kf-x) * 0.01020408), 32px));border-bottom:1px solid var(--hairline);}
@@ -501,12 +501,7 @@
   /* --bar-rule-h is the hero tagline's rendered height (2 lines at line-height 1.2).
      The project rows' feature list adopts it as a min-height so the divider rule is the
      same length on every bar row instead of shrinking to its own content. */
-  /* The info bar is the one band element that does NOT take the gutter gradient - it runs
-     the section colour edge to edge. The frame above it keeps the darker gutters past
-     --cap, which are the point of that treatment, but on the bar they read as the
-     background breaking near the window edges: 184px of it either side at 1512, 708 at
-     2560. Its content still insets to the band through its own padding. */
-  .v-port .p-sub{background:var(--section-bg,#0a0a0a);--bar-tag-size:clamp(18px,calc(18px + var(--kf-x) * 0.00127551),19px);--bar-rule-h:calc(2.4 * var(--bar-tag-size));display:grid;padding:clamp(28px,calc(28px + var(--kf-x) * 0.01020408),36px)
+  .v-port .p-sub{--bar-tag-size:clamp(18px,calc(18px + var(--kf-x) * 0.00127551),19px);--bar-rule-h:calc(2.4 * var(--bar-tag-size));display:grid;padding:clamp(28px,calc(28px + var(--kf-x) * 0.01020408),36px)
             calc(var(--cap) + clamp(24px, calc(24px + var(--kf-x) * 0.01020408), 32px))
             var(--bar-pad-b)
             calc(var(--cap) + var(--bar-pad-l));border-bottom:1px solid var(--hairline);}
