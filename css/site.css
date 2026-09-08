@@ -459,10 +459,12 @@
          the title came down less and its distance to the divider GREW as the window
          narrowed - 42.1px at 566 against 31.0 at the cap. Fitted instead so that distance
          is CONSTANT: the drop-free clearance measures 84.36 / 86.64 / 88.8 at 566 / 900 /
-         the cap, and this is that minus the 33px the gap should hold everywhere.
+         the cap, and this is that minus the 35px the gap should hold everywhere (it was
+         fitted at 33 and then raised 2px by eye - subtract from all three numbers, never
+         from one, or the constant-with-width property goes with it).
          Lives on .v-port, not .hero-block, because .p-info's --title-drop is built from it
          too - that is what keeps the wordmark and the project titles in step. */
-      --line-drop:clamp(51.36px, calc(49.7776px + var(--kf-x) * 0.0076817), 55.8px);
+      --line-drop:clamp(49.36px, calc(47.7776px + var(--kf-x) * 0.0076817), 53.8px);
       /* The rail is hidden up here, so the left edge tightens by 25px to match.
          --bar-pad-l is the one knob: the bar's padding, its rule, the tagline/feats and
          the titles all read it, so they move as a unit and the titles stay on the rule.
@@ -622,14 +624,16 @@
      Fitted against REAL INK, not line boxes: the earlier fit used Range.getClientRects(),
      which returns LINE boxes carrying the font's leading, and the two gaps it called equal
      were 10px apart on the glyphs. padding-top = titleInkClearance - 4.5, the 4.5 being how
-     far the tagline's ink starts below its own content-box top.
+     far the tagline's ink starts below its own content-box top. That fit put both gaps at
+     33; the pair has since been nudged apart by eye - title 2px up, description 3px down -
+     so it now reads ~35 above the divider and ~36 below, still constant across the range.
      The base 28 -> 37 ramp still applies below 566, where mobile has its own composition.
      --bar-pad-b takes the exact complement - the two still sum to 68 + kf * 0.02040816 -
      so the bar's HEIGHT is unchanged, which is what keeps .frame, the wordmark and the
      16:9 ring anchor out of it. Change one and you must refit the other. */
   @media (min-width:566px){
-    .v-port{--bar-pad-b:clamp(43.7px, calc(39.5px + var(--kf-x) * 0.02040816), 55.5px);}
-    .v-port .p-sub{padding-top:28.5px;}
+    .v-port{--bar-pad-b:clamp(40.7px, calc(36.5px + var(--kf-x) * 0.02040816), 52.5px);}
+    .v-port .p-sub{padding-top:31.5px;}
   }
   .v-port .p-sub .feats li{position:relative;padding-left:1.35em;white-space:nowrap;}
   .v-port .p-sub .feats li::before{content:"+";position:absolute;left:0;top:0;opacity:.45;}
