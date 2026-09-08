@@ -98,6 +98,11 @@
      js/site.js absorbs that by growing every section number's leading zeros in step
      (00 -> 000 -> 0000...), down to a small residual gap. */
   .v-port .p-rail{position:fixed;left:calc(var(--gutter) - 18px);top:calc(var(--p-top-h,60px) + 16px);bottom:var(--bar-pad-b);font-family:var(--mono);--rail-fs:clamp(6px,min(calc(8.61px + var(--kf-x) * 0.00177298),calc(1.97svh - 2.56px)),10px);--rail-ls:clamp(1.3px,min(calc(1.958px + var(--kf-x) * 0.00132905),calc(0.55svh - 0.9px)),3px);font-size:var(--rail-fs);letter-spacing:var(--rail-ls);gap:0;text-transform:uppercase;color:#555;display:flex;flex-direction:row-reverse;justify-content:space-between;z-index:6;pointer-events:none;writing-mode:vertical-rl;transform:rotate(180deg);}
+  /* TRIAL: rail hidden on desktop. Delete this block to bring it back - nothing else
+     depends on it. padRail() no-ops on its own here (it bails when the probe measures no
+     height, which a display:none rail gives it), and the rail is position:fixed, so
+     nothing reflows. Mobile keeps it: this is a desktop-only look. */
+  @media (min-width:566px){ .v-port .p-rail{display:none;} }
   /* buttons are content-sized and space-between spreads the remainder, so 00 lands hard on
      the top edge and Contact hard on the bottom whatever the leftover is. padRail() then
      eats most of that leftover by lengthening the numbers themselves. */
