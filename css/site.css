@@ -46,7 +46,10 @@
          info bar pad top       28    ->     36     0.01020408
          info bar pad right     24    ->     32     0.01020408
          --bar-pad-b            40    ->     48     0.01020408
-         info bar pad left      48    ->     40     -0.01020408
+         info bar pad left      48    ->     40     -0.01020408  (--bar-pad-l; 566+
+                                                                 overrides it 25 lower,
+                                                                 23 -> 15, since the
+                                                                 rail is hidden there)
 
      WIDENING THE BAND RESCALES EVERY K. The span is (--maxw + 64) - 360, so moving
      --maxw means multiplying every K in this file by oldSpan/newSpan - the endpoint
@@ -223,12 +226,15 @@
     /* the hero's own horizontal padding, shared with .panel--project below 
        (the pair is stated once here and referenced twice) */
     --hero-pad-r:calc(var(--cap) + clamp(32px, calc(60px + var(--kf-x) * -0.03571428), 60px));
-    /* This is the x of the info bar's vertical rule, not a free number: the rule sits at
-       --cap + (bar padding-left) + (tagline margin-left), which is 48 at 360 and 65 at the
-       cap, so the titles start exactly on the line under them. Both terms are themselves
-       keyframe pairs, which is why this one has to be a pair too - a constant would align
-       at one width and drift at the other. Mobile keeps its own value (below). */
-    --hero-pad-l:calc(var(--cap) + clamp(48px, calc(48px + var(--kf-x) * 0.02168367), 65px));}
+    /* The info bar's vertical rule sits at --cap + these two, and --hero-pad-l is built
+       from the SAME two rather than a hand-fitted pair - that is what keeps the titles on
+       the line under them when either one moves. It used to be its own clamp(48 -> 65),
+       which meant two places to edit and a silent drift if you forgot one. Mobile
+       overrides --hero-pad-l below, and --bar-pad-l is tightened at 566+ where the rail
+       is no longer taking up the left edge. */
+    --bar-pad-l:clamp(40px, calc(48px + var(--kf-x) * -0.01020408), 48px);
+    --rule-indent:clamp(0px, calc(0px + var(--kf-x) * 0.03188775), 25px);
+    --hero-pad-l:calc(var(--cap) + var(--bar-pad-l) + var(--rule-indent));}
   .v-port .panel--hero{display:grid;align-items:center;
     padding:0 var(--hero-pad-r) 0 var(--hero-pad-l);}
   /* MOBILE IS ITS OWN VERTICAL REGIME. Above 565 the drop's two limits are tuned so the
@@ -393,7 +399,15 @@
        base value IS the mobile one - the hero reads it at every width. The 4px step at the
        boundary is nothing against the ~127px one the hero's own vertical regime already
        takes there. */
-    .v-port{--kicker-mb:16px;}
+    .v-port{--kicker-mb:16px;
+      /* The rail is hidden up here, so the left edge tightens by 25px to match.
+         --bar-pad-l is the one knob: the bar's padding, its rule, the tagline/feats and
+         the titles all read it, so they move as a unit and the titles stay on the rule.
+         Same ramp shape, 25 lower at both ends. It STEPS at the boundary rather than
+         ramping, which is right - the rail is there at 565 and gone at 566.
+         This has to sit after the base .v-port block: same specificity, so an override
+         placed earlier in the file loses (it did, on the first attempt). */
+      --bar-pad-l:clamp(15px, calc(23px + var(--kf-x) * -0.01020408), 23px);}
     .v-port .hero-block{--line-drop:calc(var(--hero-size) * 0.55);
       margin-top:calc(var(--hero-drop) + var(--line-drop));
       margin-bottom:calc(var(--kicker-block) - var(--line-drop));}
@@ -443,7 +457,7 @@
   .v-port .p-sub{--bar-tag-size:clamp(18px,calc(18px + var(--kf-x) * 0.00127551),19px);--bar-rule-h:calc(2.4 * var(--bar-tag-size));display:grid;padding:clamp(28px,calc(28px + var(--kf-x) * 0.01020408),36px)
             calc(var(--cap) + clamp(24px, calc(24px + var(--kf-x) * 0.01020408), 32px))
             var(--bar-pad-b)
-            calc(var(--cap) + clamp(40px, calc(48px + var(--kf-x) * -0.01020408), 48px));border-bottom:1px solid var(--hairline);}
+            calc(var(--cap) + var(--bar-pad-l));border-bottom:1px solid var(--hairline);}
   /* one .sub-panel per stage panel, all in the same grid cell so they overlay and the
      container still sizes to the tallest. Opacity is 1 - |i - progress|, so the bar
      cross-fades on exactly the same scroll value that drives the panels. */
@@ -451,7 +465,7 @@
     opacity:calc(1 - max(var(--i) - var(--progress,0), var(--progress,0) - var(--i)));}
   /* Projects now carry the same two metadata pairs as the hero, so they inherit .meta's
      stacked layout unchanged; only the description is resized to hold the bar's height. */
-  .v-port .p-sub .tag{font-family:"DM Serif Display",serif;font-size:var(--bar-tag-size);line-height:1.2;letter-spacing:-.005em;margin:0 0 0 clamp(0px, calc(0px + var(--kf-x) * 0.03188775), 25px);padding:0 0 0 clamp(16px, calc(16px + var(--kf-x) * 0.00510205), 20px);border-left:1px solid rgba(234,230,220,0.25);max-width:24ch;color:var(--ink);font-weight:400;}
+  .v-port .p-sub .tag{font-family:"DM Serif Display",serif;font-size:var(--bar-tag-size);line-height:1.2;letter-spacing:-.005em;margin:0 0 0 var(--rule-indent);padding:0 0 0 clamp(16px, calc(16px + var(--kf-x) * 0.00510205), 20px);border-left:1px solid rgba(234,230,220,0.25);max-width:24ch;color:var(--ink);font-weight:400;}
   .v-port .p-sub .meta{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:grid;row-gap:4px;white-space:nowrap;text-align:right;margin:0;}
   .v-port .p-sub .meta b{color:var(--ink);font-weight:400;font-size:13px;text-transform:none;letter-spacing:.02em;}
   /* size and gap live in vars on .panel--hero so .hero-block can cancel them out - see the
@@ -517,7 +531,7 @@
     /* same divider anchor as the hero's tagline, and deliberately the same margin/padding
        so the rule sits at one x-position across every bar row - otherwise it shifts
        sideways as you scroll from the hero to a project */
-    margin:0 0 0 clamp(0px, calc(0px + var(--kf-x) * 0.03188775), 25px);
+    margin:0 0 0 var(--rule-indent);
     padding:0 0 0 clamp(16px, calc(16px + var(--kf-x) * 0.00510205), 20px);
     border-left:1px solid rgba(234,230,220,0.25);}
   .v-port .p-sub .feats li{position:relative;padding-left:1.35em;white-space:nowrap;}
