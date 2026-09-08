@@ -543,12 +543,14 @@
   .v-port .p-sub .tag{font-family:"DM Serif Display",serif;font-size:var(--bar-tag-size);line-height:1.2;letter-spacing:-.005em;margin:0 0 0 var(--rule-indent);padding:0 0 0 clamp(16px, calc(16px + var(--kf-x) * 0.00510205), 20px);border-left:1px solid rgba(234,230,220,0.25);max-width:24ch;color:var(--ink);font-weight:400;}
   .v-port .p-sub .meta{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:grid;row-gap:4px;white-space:nowrap;text-align:right;margin:0;}
   .v-port .p-sub .meta b{color:var(--ink);font-weight:400;font-size:13px;text-transform:none;letter-spacing:.02em;}
-  /* Porcupine's release value is a link to the App Store. Underlined rather than coloured:
-     the row is two label/value pairs and a colour would read as a third piece of
-     information. The offset keeps the rule clear of the type's descenders. */
-  .v-port .p-sub .meta b a{color:inherit;text-decoration:underline;text-decoration-color:rgba(234,230,220,.45);
-    text-underline-offset:3px;transition:text-decoration-color .18s ease;}
-  .v-port .p-sub .meta b a:hover,.v-port .p-sub .meta b a:focus-visible{text-decoration-color:currentColor;}
+  /* Porcupine's release value is a link to the App Store: this panel's own #1fcbc4, with a
+     trailing arrow rather than an underline. The arrow is a ::after so the link's accessible
+     name stays "Out now"; it is the outward-pointing one because the link leaves the site,
+     and it nudges along its own diagonal on hover, which is the only motion the bar has. */
+  .v-port .p-sub .meta b a{color:#1fcbc4;text-decoration:none;}
+  .v-port .p-sub .meta b a::after{content:"\2197";margin-left:.28em;font-size:.9em;
+    display:inline-block;transition:transform .18s ease;}
+  .v-port .p-sub .meta b a:hover::after,.v-port .p-sub .meta b a:focus-visible::after{transform:translate(1px,-1px);}
   /* size and gap live in vars on .panel--hero so .hero-block can cancel them out - see the
      --kicker-block note there. line-height is stated explicitly because that calc needs it. */
   .v-port .panel .kicker{font-family:var(--mono);font-size:var(--kicker-fs);line-height:1.55;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:var(--kicker-mb);}
@@ -705,18 +707,13 @@
        be one line or two and the CTA below it tracks the text rather than the block. */
     .v-port .panel--project .p-info .role{font-size:var(--hero-size);line-height:.82;
       width:max-content;max-width:100%;}
-    /* Unicorn Porcupine breaks over two lines. width:min-content wraps at the space
-       without touching the markup, so mobile - which is its own layout below 566 and
-       wraps on its own column width - is unaffected.
-       Two lines fill .p-info's box exactly: the box is --hero-size * 1.64 and the line
-       height is .82, so 2 x .82 = 1.64. Nothing overflows and the block does not move.
-       --title-drop then loses its 0.82 line. That term exists to walk a ONE-line title
-       down to where the wordmark's second line sits; a two-line title already has a
-       second line of its own, so it wants the wordmark's FIRST line and only the shared
-       --line-drop. Both rules must sit after the .panel--project ones above - an
+    /* Unicorn Porcupine was tried on two lines here - width:min-content to wrap at the
+       space, plus --title-drop:var(--line-drop) for this panel to drop the 0.82 term (a
+       two-line title already has a second line, so it wants the wordmark's FIRST). It
+       lined up exactly, but it starts a line higher, and at 566 the first line crossed
+       the phone's bottom-left corner while the lag line ran over the image. Back to one
+       line. Both rules would have to go after the .panel--project ones above - an
        attribute selector plus two classes ties with three classes on specificity. */
-    .v-port .panel[data-idx="0"] .p-info .role{width:min-content;}
-    .v-port .panel[data-idx="0"] .p-info{--title-drop:var(--line-drop);}
     .v-port .panel--project .p-info .cta{margin-top:16px;}
     /* Centred in the frame, both axes - inset:0 + margin:auto rather than a transform,
        since positionAll() owns the phone's transform below 566. The title is allowed to
@@ -750,11 +747,11 @@
   .v-port .p-outro .contact dd{margin:0;color:var(--ink);text-transform:none;letter-spacing:.02em;}
   .v-port .p-outro .contact a{color:inherit;text-decoration:none;}
 
-  /* The last rule on the page, and the only --hairline survivor - but at #181615 on black
-     it was barely there once the other three came off. rgba(234,230,220,.25) is the value
-     the info bar's tagline already uses for its own vertical rule, so the two read as the
-     same weight of line rather than as two different greys. */
-  .v-port .p-foot{padding:28px var(--gutter);border-top:1px solid rgba(234,230,220,.25);display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+  /* The last rule on the page. #181615 (about .09 of the ink colour) was too dim to read
+     once the header and bar hairlines came off; the tagline's own .25 was far too much for
+     a line running the full width. .15 sits between them - visible as a divider, not as a
+     feature. The tagline's rule is short, which is why it can carry a heavier value. */
+  .v-port .p-foot{padding:28px var(--gutter);border-top:1px solid rgba(234,230,220,.15);display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
   .v-port .p-foot .wm{font-family:"Distortion",serif;font-size:18px;letter-spacing:.02em;color:var(--ink);text-transform:none;}
   .v-port .p-foot .to-top{color:inherit;text-decoration:none;cursor:pointer;}
   .v-port .p-foot .to-top:hover{color:var(--ink);}
