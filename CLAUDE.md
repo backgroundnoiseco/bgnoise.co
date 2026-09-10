@@ -155,7 +155,10 @@ Right side: hero shows `ESTABLISHED / LOCATED` stacked (label over value — `Es
 |---|---|---|
 | `PLATFORMS / iOS · macOS` (shipped for months) | 88.7 | 18.9 |
 | `EST. / 2025` + `LOCATED / NC` | 61.6 | 0 — fits |
+| `EST / 2025` + `LOCATED / NC, USA` | 61.6 | 0 — fits |
 | `ESTABLISHED / 2025` + `LOCATED / NC, USA` (current) | 96.8 | **27.1** (3.1 of it off-screen) |
+
+Spelling `Established` out is the whole of it — `LOCATED` is the widest string in every abbreviated version, and `NC, USA` costs nothing. The three `.sub-panel`s also share one grid cell, so the cell takes the widest of them: when the hero overflows it drags the project rows' metadata past the edge too, even though their own pairs are only 70.4 wide. Measured both ways — all three rows sit 27.1 past with the full word and 0 past with `Est`. Fixing the hero fixes all three.
 
 Desktop is unaffected at any width — it measures 0 past the edge from 566 up, and `.meta` stays 86.4px so the bar's height never moves. **The known fix, not applied because mobile is off-limits right now:** give `.tag` `min-width: 0` at ≤565 so the flex row can shrink it. It only needs to give up ~27px (194.3 → ~167, against a min-content of 146.7), which costs the tagline one more wrapped line and stays well under `.meta`'s 86px. Measure at 360 after any label change here. **Unicorn Porcupine's release value is `Out now`, a link to its App Store listing** — this panel's own `#1fcbc4` with a trailing arrow and no underline. The arrow is a `::after`, so the link's accessible name stays "Out now"; it points outward because the link leaves the site, and nudges along its own diagonal on hover, which is the only motion the bar has.
 
